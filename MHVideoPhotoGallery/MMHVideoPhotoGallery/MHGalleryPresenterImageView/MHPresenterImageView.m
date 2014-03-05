@@ -101,10 +101,12 @@
     self.presenter.presentingImageView = self;
     self.presenter.interactive = YES;
     
+#warning Debug Lockerios. Hide Over View.
     [self.viewController presentMHGalleryWithItems:self.galleryItems
                                           forIndex:self.currentImageIndex
                                      fromImageView:self
                           withInteractiveTranstion:self.presenter
+                                      hideOverVIew:YES
                                     finishCallback:^(UINavigationController *galleryNavMH, NSInteger pageIndex, UIImage *image,MHTransitionDismissMHGallery *interactiveDismissMHGallery) {
                                         if (self.finishedCallback) {
                                             self.finishedCallback(galleryNavMH,pageIndex,image,interactiveDismissMHGallery);

@@ -26,6 +26,9 @@
 @property (nonatomic, strong)          UIImageView *dismissFromImageView;
 @property (nonatomic, strong)          MHTransitionPresentMHGallery *interactivePresentationTranstion;
 
+#warning Lockerios debug.
+@property (nonatomic)                  BOOL isShareHide;
+
 @property (nonatomic,getter = isUserScrolling)                   BOOL userScrolls;
 @property (nonatomic,getter = isHiddingToolBarAndNavigationBar)  BOOL hiddingToolBarAndNavigationBar;
 

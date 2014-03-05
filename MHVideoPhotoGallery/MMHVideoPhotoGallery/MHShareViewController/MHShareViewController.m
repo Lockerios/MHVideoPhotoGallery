@@ -379,7 +379,10 @@
     if ([self.selectedRows containsObject:indexPath]) {
         cell.selectionImageView.backgroundColor = [UIColor whiteColor];
         cell.selectionImageView.tintColor = [UIColor colorWithRed:0 green:0.46 blue:1 alpha:1];
-        cell.selectionImageView.image =  [[UIImage imageNamed:@"EditControlSelected"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+#warning Debug
+        if (MHiOS7) {
+            cell.selectionImageView.image =  [[UIImage imageNamed:@"EditControlSelected"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        }
     }
     
     cell.tag = indexPath.row;

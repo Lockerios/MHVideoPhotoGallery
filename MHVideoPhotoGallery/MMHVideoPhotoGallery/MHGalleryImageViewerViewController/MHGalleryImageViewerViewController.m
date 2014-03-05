@@ -89,7 +89,10 @@
                                                             options:@{ UIPageViewControllerOptionInterPageSpacingKey : @30.f }];
     self.pvc.delegate = self;
     self.pvc.dataSource = self;
-    self.pvc.automaticallyAdjustsScrollViewInsets =NO;
+#warning Debug
+    if (MHiOS7) {
+        self.pvc.automaticallyAdjustsScrollViewInsets =NO;
+    }
     
     MHGalleryItem *item = self.galleryItems[self.pageIndex];
     
@@ -138,10 +141,18 @@
                                                                          target:self
                                                                          action:nil];
     
-    if (item.galleryType == MHGalleryTypeVideo) {
-        [self.tb setItems:@[self.shareBarButton,flex,self.leftBarButton,flex,self.playStopBarButton,flex,self.rightBarButton,flex]];
-    }else{
-        [self.tb setItems:@[self.shareBarButton,flex,self.leftBarButton,flex,self.rightBarButton,flex]];
+    if (self.isShareHide) {
+        if (item.galleryType == MHGalleryTypeVideo) {
+            [self.tb setItems:@[flex,self.leftBarButton,flex,self.playStopBarButton,flex,self.rightBarButton,flex]];
+        }else{
+            [self.tb setItems:@[flex,self.leftBarButton,flex,self.rightBarButton,flex]];
+        }
+    } else {
+        if (item.galleryType == MHGalleryTypeVideo) {
+            [self.tb setItems:@[self.shareBarButton,flex,self.leftBarButton,flex,self.playStopBarButton,flex,self.rightBarButton,flex]];
+        }else{
+            [self.tb setItems:@[self.shareBarButton,flex,self.leftBarButton,flex,self.rightBarButton,flex]];
+        }
     }
     
     if (self.pageIndex == 0) {
@@ -311,11 +322,20 @@
 
 -(void)updateToolBarForItem:(MHGalleryItem*)item{
     UIBarButtonItem *flex = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
-    if (item.galleryType == MHGalleryTypeVideo) {
-        [self changeToPlayButton];
-        [self.tb setItems:@[self.shareBarButton,flex,self.leftBarButton,flex,self.playStopBarButton,flex,self.rightBarButton,flex]];
-    }else{
-        [self.tb setItems:@[self.shareBarButton,flex,self.leftBarButton,flex,self.rightBarButton,flex]];
+    if (self.isShareHide) {
+        if (item.galleryType == MHGalleryTypeVideo) {
+            [self changeToPlayButton];
+            [self.tb setItems:@[flex,self.leftBarButton,flex,self.playStopBarButton,flex,self.rightBarButton,flex]];
+        }else{
+            [self.tb setItems:@[flex,self.leftBarButton,flex,self.rightBarButton,flex]];
+        }
+    } else {
+        if (item.galleryType == MHGalleryTypeVideo) {
+            [self changeToPlayButton];
+            [self.tb setItems:@[self.shareBarButton,flex,self.leftBarButton,flex,self.playStopBarButton,flex,self.rightBarButton,flex]];
+        }else{
+            [self.tb setItems:@[self.shareBarButton,flex,self.leftBarButton,flex,self.rightBarButton,flex]];
+        }
     }
 }
 

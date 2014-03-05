@@ -179,7 +179,10 @@ UIImage *MHGalleryImage(NSString *imageName){
         nav.viewControllers = @[gallery,detail];
     }
     if (animated) {
-        nav.transitioningDelegate = viewcontroller;
+#warning Debug
+        if (MHiOS7) {
+            nav.transitioningDelegate = viewcontroller;
+        }
         nav.modalPresentationStyle = UIModalPresentationFullScreen;
     }
     [viewcontroller presentViewController:nav animated:YES completion:nil];
@@ -642,16 +645,22 @@ UIImage *MHGalleryImage(NSString *imageName){
     };
     UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:gallery];
     if (animated) {
-        nav.transitioningDelegate = self;
+#warning Debug
+        if (MHiOS7) {
+            nav.transitioningDelegate = self;
+        }
         nav.modalPresentationStyle = UIModalPresentationFullScreen;
     }
     [self presentViewController:nav animated:YES completion:nil];
 }
 
+#warning Add Hide parament. Debug Lockerios.
+
 -(void)presentMHGalleryWithItems:(NSArray*)galleryItems
                         forIndex:(NSInteger)index
                    fromImageView:(UIImageView*)fromImageView
         withInteractiveTranstion:(MHTransitionPresentMHGallery*)presentInteractive
+                    hideOverVIew:(BOOL)isHide
                   finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex,UIImage *image,MHTransitionDismissMHGallery *interactiveDismissMHGallery)
                                   )FinishBlock
         customAnimationFromImage:(BOOL)animated{
@@ -685,13 +694,22 @@ UIImage *MHGalleryImage(NSString *imageName){
     };
     
     UINavigationController *nav = [UINavigationController new];
-    if (![[MHGallerySharedManager sharedManager].viewModes containsObject:MHGalleryViewModeOverView] || galleryItems.count ==1) {
+    
+    if (isHide) {
         nav.viewControllers = @[detail];
-    }else{
-        nav.viewControllers = @[gallery,detail];
+    } else {
+        if (![[MHGallerySharedManager sharedManager].viewModes containsObject:MHGalleryViewModeOverView] || galleryItems.count ==1) {
+            nav.viewControllers = @[detail];
+        }else{
+            nav.viewControllers = @[gallery,detail];
+        }
     }
+    
     if (animated) {
-        nav.transitioningDelegate = self;
+#warning Debug
+        if (MHiOS7) {
+            nav.transitioningDelegate = self;
+        }
         nav.modalPresentationStyle = UIModalPresentationFullScreen;
     }
     [self presentViewController:nav animated:YES completion:nil];
@@ -705,10 +723,12 @@ UIImage *MHGalleryImage(NSString *imageName){
                                   )FinishBlock
         customAnimationFromImage:(BOOL)animated{
     
+#warning Debug Lockerios. Hide Over View.
     [self presentMHGalleryWithItems:galleryItems
                            forIndex:index
                       fromImageView:fromImageView
            withInteractiveTranstion:nil
+                       hideOverVIew:YES
                      finishCallback:FinishBlock
            customAnimationFromImage:animated];
 }
@@ -769,6 +789,10 @@ UIImage *MHGalleryImage(NSString *imageName){
     UINavigationController *nav = (UINavigationController*)presented;
     if ([nav.viewControllers.lastObject  isKindOfClass:[MHGalleryImageViewerViewController class]]) {
         MHGalleryImageViewerViewController *imageViewer = nav.viewControllers.lastObject;
+        
+#warning ImageViewer pushed here from TableView. Add Hide share code.
+        imageViewer.isShareHide = YES;
+        
         if (imageViewer.interactivePresentationTranstion) {
             MHTransitionPresentMHGallery *detail = imageViewer.interactivePresentationTranstion;
             detail.presentingImageView = imageViewer.presentingFromImageView;

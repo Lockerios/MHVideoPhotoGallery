@@ -33,7 +33,10 @@
         
     self.title =  MHGalleryLocalizedString(@"overview.title.current");
 
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]initWithImage:[MHGalleryImage(@"ic_square") imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] style:UIBarButtonItemStyleBordered target:self action:nil];
+#warning Debug
+    if (MHiOS7) {
+        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]initWithImage:[MHGalleryImage(@"ic_square") imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] style:UIBarButtonItemStyleBordered target:self action:nil];   
+    }
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(donePressed)];
     

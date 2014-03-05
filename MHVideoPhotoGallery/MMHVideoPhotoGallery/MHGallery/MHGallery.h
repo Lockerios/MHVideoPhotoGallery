@@ -14,6 +14,8 @@
 #define MHISIPAD ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 #define kMHGalleryBundleName @"MHGallery.bundle"
 
+#define MHiOS7 ([[[UIDevice currentDevice] systemVersion] floatValue]>=7.0)
+
 @class MHTransitionDismissMHGallery;
 @class MHTransitionPresentMHGallery;
 @class MHPresenterImageView;
@@ -231,6 +233,8 @@ typedef NS_ENUM(NSUInteger, MHYoutubeThumbQuality) {
 @end
 
 @interface UIViewController(MHGalleryViewController)<UIViewControllerTransitioningDelegate>
+
+
 /**
  *  Use this Methode to Present to MHGallery. If you want to animate it set the 'ivForPresentingAndDismissingMHGallery' from which you are presenting. In the FinishBlock you have to set ‘ivForPresentingAndDismissingMHGallery‘ again with the new ImageView.
  *
@@ -261,11 +265,13 @@ typedef NS_ENUM(NSUInteger, MHYoutubeThumbQuality) {
                      dismissImageView:(UIImageView*)dismissImageView
                            completion:(void (^)(void))completion;
 
+#warning Debug Lockerios. Add hide Over view.
 
 -(void)presentMHGalleryWithItems:(NSArray*)galleryItems
                         forIndex:(NSInteger)index
                    fromImageView:(UIImageView*)fromImageView
         withInteractiveTranstion:(MHTransitionPresentMHGallery*)presentInteractive
+                    hideOverVIew:(BOOL)isHide
                   finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex,UIImage *image,MHTransitionDismissMHGallery *interactiveDismissMHGallery)
                                   )FinishBlock
         customAnimationFromImage:(BOOL)animated;
