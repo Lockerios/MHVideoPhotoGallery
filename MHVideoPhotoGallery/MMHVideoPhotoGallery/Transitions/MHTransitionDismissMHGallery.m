@@ -16,16 +16,17 @@
 @property (nonatomic,assign) CGRect startFrame;
 @property (nonatomic,assign) CGRect navFrame;
 
-@property (nonatomic,assign) BOOL hasActiveVideo;
 @property (nonatomic,strong) UIView *backView;
 @property (nonatomic,strong) UIView *containerView;
 @property (nonatomic,strong) MHUIImageViewContentViewAnimation *cellImageSnapshot;
+
 @end
+
 
 @implementation MHTransitionDismissMHGallery
 
-- (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
-    
+- (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext
+{
     self.context = transitionContext;
     
     id toViewControllerNC = (UINavigationController*)[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
@@ -33,7 +34,6 @@
     UINavigationController *fromViewController = (UINavigationController*)[transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     [fromViewController view].alpha =0;
 
-    
     MHGalleryImageViewerViewController *imageViewer  = (MHGalleryImageViewerViewController*)fromViewController.visibleViewController;
     
     UIView *containerView = [transitionContext containerView];
@@ -90,36 +90,35 @@
     }
     double delayInSeconds = delayTime;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.transitionImageView.hidden = YES;
-        
-        [UIView animateWithDuration:duration animations:^{
-            whiteView.alpha =0;
-            [toViewControllerNC view].alpha = 1;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.transitionImageView.hidden = YES;
             
-            cellImageSnapshot.frame =[containerView convertRect:self.transitionImageView.frame fromView:self.transitionImageView.superview];
-            
-            if (self.transitionImageView.contentMode == UIViewContentModeScaleAspectFit) {
-                cellImageSnapshot.contentMode = UIViewContentModeScaleAspectFit;
-            }
-            if (self.transitionImageView.contentMode == UIViewContentModeScaleAspectFill) {
-                cellImageSnapshot.contentMode = UIViewContentModeScaleAspectFill;
-            }
-        } completion:^(BOOL finished) {
-            self.transitionImageView.hidden = NO;
-            [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
-            
-            [[UIApplication sharedApplication] setStatusBarStyle:[MHGalleryDataManager sharedDataManager].oldStatusBarStyle];
-        }];
-        
+            [UIView animateWithDuration:duration animations:^{
+                whiteView.alpha =0;
+                [toViewControllerNC view].alpha = 1;
+                
+                cellImageSnapshot.frame =[containerView convertRect:self.transitionImageView.frame fromView:self.transitionImageView.superview];
+                
+                if (self.transitionImageView.contentMode == UIViewContentModeScaleAspectFit) {
+                    cellImageSnapshot.contentMode = UIViewContentModeScaleAspectFit;
+                }
+                if (self.transitionImageView.contentMode == UIViewContentModeScaleAspectFill) {
+                    cellImageSnapshot.contentMode = UIViewContentModeScaleAspectFill;
+                }
+            } completion:^(BOOL finished) {
+                self.transitionImageView.hidden = NO;
+                [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
+                
+                [[UIApplication sharedApplication] setStatusBarStyle:[MHGalleryDataManager sharedDataManager].oldStatusBarStyle];
+            }];
+        });
     });
-    });
-    
 }
 
--(void)startInteractiveTransition:(id<UIViewControllerContextTransitioning>)transitionContext{
+- (void)startInteractiveTransition:(id<UIViewControllerContextTransitioning>)transitionContext
+{
     self.context = transitionContext;
     
     id toViewControllerNC = (UINavigationController*)[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
@@ -186,9 +185,8 @@
     
 }
 
-
--(void)updateInteractiveTransition:(CGFloat)percentComplete{
-  
+- (void)updateInteractiveTransition:(CGFloat)percentComplete
+{
     self.backView.alpha = 1.1-percentComplete;
 
     if (self.toTransform != self.orientationTransformBeforeDismiss) {
@@ -202,7 +200,8 @@
     }
 }
 
--(void)finishInteractiveTransition{
+- (void)finishInteractiveTransition
+{
     CGFloat delayTime  = 0.0;
     if (self.toTransform != self.orientationTransformBeforeDismiss) {
         [UIView animateWithDuration:0.2 animations:^{
@@ -243,9 +242,8 @@
     
 }
 
-
--(void)cancelInteractiveTransition{
-    
+- (void)cancelInteractiveTransition
+{
     [UIView animateWithDuration:0.3 animations:^{
         if (self.toTransform != self.orientationTransformBeforeDismiss) {
             self.cellImageSnapshot.center = [UIApplication sharedApplication].keyWindow.center;
@@ -275,7 +273,8 @@
     
 }
 
--(void)doOrientationwithFromViewController:(UINavigationController*)fromViewController{
+- (void)doOrientationwithFromViewController:(UINavigationController*)fromViewController
+{
     fromViewController.view.transform = CGAffineTransformMakeRotation(self.startTransform);
     fromViewController.view.center = [UIApplication sharedApplication].keyWindow.center;
     if (self.toTransform != self.orientationTransformBeforeDismiss) {
@@ -290,16 +289,15 @@
         }
     }else{
         fromViewController.navigationBar.frame = CGRectMake(0, 0, fromViewController.navigationBar.frame.size.width, 64);
-        if (!MHISIPAD) {
-            if (self.orientationTransformBeforeDismiss!=0) {
-                fromViewController.navigationBar.frame = CGRectMake(0, 0, fromViewController.navigationBar.frame.size.width, 52);
-            }
+        if (self.orientationTransformBeforeDismiss!=0) {
+            fromViewController.navigationBar.frame = CGRectMake(0, 0, fromViewController.navigationBar.frame.size.width, 52);
         }
     }
 }
 
 
-- (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext {
+- (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext
+{
     return 0.25;
 }
 

@@ -10,7 +10,6 @@
 #import "MHTransitionPresentMHGallery.h"
 #import "MHPresenterImageView.h"
 
-#define MHISIPAD ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 #define kMHGalleryBundleName @"MHGallery.bundle"
 
 #define MHiOS7 ([[[UIDevice currentDevice] systemVersion] floatValue]>=7.0)
@@ -25,8 +24,6 @@ extern void MHGalleryCustomImageBlock(UIImage *(^customImageBlock)(NSString *ima
 extern NSBundle *MHGalleryBundle(void);
 extern NSString *MHGalleryLocalizedString(NSString *localizeString);
 extern UIImage  *MHGalleryImage(NSString *imageName);
-extern NSDictionary *MHDictionaryForQueryString(NSString *string);
-
 
 @interface MHGalleryItem : NSObject
 
@@ -69,22 +66,6 @@ extern NSDictionary *MHDictionaryForQueryString(NSString *string);
 + (MHGalleryDataManager *)sharedDataManager;
 
 - (UIImage *)imageByRenderingView:(id)view;
-
-/**
- *  DEPRECATED use presentMHGalleryWithItems:forIndex:finishCallback:customAnimationFromImage:
- *
- *  @param galleryItems   An array of MHGalleryItems
- *  @param index          The start index
- *  @param viewcontroller Your viewcontroller from which you present. Its used to set the transitioningDelegate delegate
- *  @param FinishBlock    PageIndex shows on which Index the User dismissed the Gallery. If interactiveTransition isn't nil the User dismisses the Gallery with an interaction. You will also get the Image of the current page.
- *  @param animated       To use animated you need 3 delegate Methods, -animationControllerForDismissedController , animationControllerForPresentedController, interactionControllerForDismissal.
- */
--(void)presentMHGalleryWithItems:(NSArray*)galleryItems
-                        forIndex:(NSInteger)index
-        andCurrentViewController:(id)viewcontroller
-                  finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex, MHTransitionDismissMHGallery *interactiveTransition,UIImage *image)
-                                  )FinishBlock
-        withImageViewTransiation:(BOOL)animated __attribute__((deprecated));
 
 @end
 

@@ -10,51 +10,34 @@
 #import "MHGallery.h"
 
 @interface MHPresenterImageView ()
+
 @property (nonatomic) CGPoint lastPoint;
 @property (nonatomic) CGFloat startScale;
+
 @end
 
 
 @implementation MHPresenterImageView
 
--(id)initWithCoder:(NSCoder *)aDecoder{
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        [self initGestureRecognizers];
-    }
-    return self;
-}
+#pragma mark - Methods
 
-- (id)initWithFrame:(CGRect)frame{
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self initGestureRecognizers];
-    }
-    return self;
-}
-
--(void)setInseractiveGalleryPresentionWithItems:(NSArray*)galleryItems
+- (void)setInseractiveGalleryPresentionWithItems:(NSArray*)galleryItems
                               currentImageIndex:(NSInteger)currentImageIndex
                           currentViewController:(UIViewController*)viewController
                                  finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex,UIImage *image,MHTransitionDismissMHGallery *interactiveDismissMHGallery)
-                                                 )FinishBlock{
+                                                 )FinishBlock
+{
     self.galleryItems = galleryItems;
     self.currentImageIndex = currentImageIndex;
     self.viewController = viewController;
     self.finishedCallback = FinishBlock;
 }
--(void)setShoudlUsePanGestureReconizer:(BOOL)shoudlUsePanGestureReconizer{
-    for (UIGestureRecognizer *recognizer in  self.gestureRecognizers) {
-        [self removeGestureRecognizer:recognizer];
-    }
-    _shoudlUsePanGestureReconizer = shoudlUsePanGestureReconizer;
-    [self initGestureRecognizers];
-}
--(void)initGestureRecognizers{
+
+- (void)initGestureRecognizers
+{
     UIPinchGestureRecognizer *pinchToPresent = [[UIPinchGestureRecognizer alloc]initWithTarget:self
                                                                                         action:@selector(presentMHGalleryPinch:)];
     [self addGestureRecognizer:pinchToPresent];
-    
     
     UIRotationGestureRecognizer *rotate = [[UIRotationGestureRecognizer alloc]initWithTarget:self
                                                                                       action:@selector(userDidRoate:)];
@@ -64,28 +47,32 @@
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTapOnImage)];
     [self addGestureRecognizer:tap];
     
-    
     if (self.shoudlUsePanGestureReconizer) {
         UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(presentMHGalleryPan:)];
         [self addGestureRecognizer:pan];
     }
     self.userInteractionEnabled =YES;
-    
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    return YES;
+- (void)setShoudlUsePanGestureReconizer:(BOOL)shoudlUsePanGestureReconizer
+{
+    for (UIGestureRecognizer *recognizer in  self.gestureRecognizers) {
+        [self removeGestureRecognizer:recognizer];
+    }
+    _shoudlUsePanGestureReconizer = shoudlUsePanGestureReconizer;
+    [self initGestureRecognizers];
 }
 
-
--(void)userDidRoate:(UIRotationGestureRecognizer*)recognizer{
+- (void)userDidRoate:(UIRotationGestureRecognizer*)recognizer
+{
     if (self.presenter) {
         CGFloat angle = recognizer.rotation;
         self.presenter.angle = angle;
     }
 }
 
--(void)didTapOnImage{
+- (void)didTapOnImage
+{
     [self.viewController presentMHGalleryWithItems:self.galleryItems
                                           forIndex:self.currentImageIndex
                                      fromImageView:self
@@ -95,8 +82,9 @@
                                         }
                                     } customAnimationFromImage:YES];
 }
--(void)presentMHGallery{
-    
+
+- (void)presentMHGallery
+{
     self.presenter = [MHTransitionPresentMHGallery new];
     self.presenter.presentingImageView = self;
     self.presenter.interactive = YES;
@@ -112,7 +100,8 @@
                                     } customAnimationFromImage:YES];
 }
 
--(void)presentMHGalleryPan:(UIPanGestureRecognizer*)recognizer{
+- (void)presentMHGalleryPan:(UIPanGestureRecognizer*)recognizer
+{
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         [self presentMHGallery];
         self.lastPoint = [recognizer locationInView:self.viewController.view];
@@ -127,7 +116,8 @@
     }
 }
 
--(void)presentMHGalleryPinch:(UIPinchGestureRecognizer*)recognizer{
+- (void)presentMHGalleryPinch:(UIPinchGestureRecognizer*)recognizer
+{
     CGFloat scale = recognizer.scale/5;
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         if (recognizer.scale>1) {
@@ -157,6 +147,35 @@
     }
     
     
+}
+
+#pragma mark - Lifecycle
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self initGestureRecognizers];
+    }
+    return self;
+}
+
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self initGestureRecognizers];
+    }
+    return self;
+}
+
+#pragma mark - Actions
+
+#pragma mark UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
 }
 
 @end

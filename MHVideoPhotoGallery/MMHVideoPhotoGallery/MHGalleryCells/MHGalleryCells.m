@@ -9,8 +9,10 @@
 #import "MHGalleryCells.h"
 #import "MHGallery.h"
 
-@implementation MHGalleryOverViewCell
-- (id)initWithFrame:(CGRect)frame{
+@implementation MHGalleryViewCell
+
+- (id)initWithFrame:(CGRect)frame
+{
     self = [super initWithFrame:frame];
     if (self) {
         _thumbnail = [[UIImageView alloc] initWithFrame:self.bounds];
@@ -79,9 +81,10 @@
 @end
 
 
-@implementation MHGalleryCollectionViewCell
+@implementation MHGalleryTableViewCell
 
--(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+-(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
     if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) return nil;
     
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
@@ -96,14 +99,15 @@
     _collectionView = [[UICollectionView alloc] initWithFrame:self.bounds
                                          collectionViewLayout:layout];
     
-    [self.collectionView registerClass:[MHGalleryOverViewCell class] forCellWithReuseIdentifier:@"MHGalleryOverViewCell"];
+    [self.collectionView registerClass:[MHGalleryViewCell class] forCellWithReuseIdentifier:@"MHGalleryOverViewCell"];
     
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [[self contentView] addSubview:self.collectionView];
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame{
+- (id)initWithFrame:(CGRect)frame
+{
     self = [super initWithFrame:frame];
     if (self) {
         _collectionView = [[UICollectionView alloc] initWithFrame:self.bounds];
@@ -112,7 +116,9 @@
     }
     return self;
 }
--(void)prepareForReuse{
+
+- (void)prepareForReuse
+{
     
 }
 

@@ -20,7 +20,8 @@
 @implementation MHTransitionPresentMHGallery
 
 
-- (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
+- (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext
+{
         
     UINavigationController *toViewController = (UINavigationController*)[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     
@@ -79,12 +80,15 @@
         }];
     }];
 }
-- (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext {
+
+- (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext
+{
     return 0.3;
 }
 
 
--(void)startInteractiveTransition:(id<UIViewControllerContextTransitioning>)transitionContext{
+- (void)startInteractiveTransition:(id<UIViewControllerContextTransitioning>)transitionContext
+{
     self.context = transitionContext;
   
     self.interactiveToViewController = (UINavigationController*)[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
@@ -112,7 +116,8 @@
 
 }
 
--(void)updateInteractiveTransition:(CGFloat)percentComplete{
+- (void)updateInteractiveTransition:(CGFloat)percentComplete
+{
     [super updateInteractiveTransition:percentComplete];
   
     self.backView.alpha = percentComplete;
@@ -120,14 +125,18 @@
     self.transitionImageView.transform = CGAffineTransformMakeScale(1+self.scale*3, 1+self.scale*3);
     self.transitionImageView.transform = CGAffineTransformRotate(self.transitionImageView.transform, self.angle);
 }
--(CGAffineTransform)rotateToZeroAffineTranform{
+
+- (CGAffineTransform)rotateToZeroAffineTranform
+{
     
     CGAffineTransform transform = CGAffineTransformIdentity;
     transform = CGAffineTransformMakeScale(1+self.scale*3, 1+self.scale*3);
     transform = CGAffineTransformRotate(transform, 0);
     return transform;
 }
--(void)cancelInteractiveTransition{
+
+- (void)cancelInteractiveTransition
+{
     [super cancelInteractiveTransition];
     
     
@@ -152,7 +161,8 @@
     }];
 }
 
--(CGFloat)timeForUnrotet{
+- (CGFloat)timeForUnrotet
+{
     CGFloat isRotateTime = 0.2;
     if (self.angle ==0) {
         isRotateTime =0;
@@ -160,7 +170,8 @@
     return isRotateTime;
 }
 
--(void)finishInteractiveTransition{
+- (void)finishInteractiveTransition
+{
     [super finishInteractiveTransition];
     
     MHGalleryImageViewerViewController *imageViewer = self.interactiveToViewController.viewControllers.lastObject;

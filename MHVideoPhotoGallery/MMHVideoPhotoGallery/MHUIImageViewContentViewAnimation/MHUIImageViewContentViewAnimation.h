@@ -15,4 +15,5 @@
             withDuration:(float)duration
               afterDelay:(float)delay
                 finished:(void (^)(BOOL finished))finishedBlock;
+
 @end

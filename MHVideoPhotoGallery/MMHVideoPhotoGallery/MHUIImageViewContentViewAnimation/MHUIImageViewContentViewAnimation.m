@@ -11,45 +11,27 @@
 
 @interface MHUIImageViewContentViewAnimation ()
 
-@property (nonatomic,readwrite) CGRect      changedFrameWrapper;
-@property (nonatomic,readwrite) CGRect      changedFrameImage;
-@property (nonatomic,strong)    UIImageView *imageView;
+@property (nonatomic,readwrite) CGRect changedFrameWrapper;
+@property (nonatomic,readwrite) CGRect changedFrameImage;
+@property (nonatomic,strong) UIImageView* imageView;
 
 @end
 
 @implementation MHUIImageViewContentViewAnimation
 
-- (id)init {
-    self = [super init];
-    if (self) {
-        self.imageView = [[UIImageView alloc]init];
-        self.imageView.contentMode = UIViewContentModeCenter;
-        [self addSubview:self.imageView];
-        self.clipsToBounds = YES;
-    }
-    return self;
-}
+#pragma mark - Methods
 
-- (id)initWithFrame:(CGRect)frame{
-    self = [super initWithFrame:frame];
-    if (self) {
-        self.imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
-        self.imageView.contentMode = UIViewContentModeCenter;
-        [self addSubview:self.imageView];
-        self.clipsToBounds = YES;
-    }
-    return self;
-}
-
--(void)animateToViewMode:(UIViewContentMode)contenMode
-                forFrame:(CGRect)frame
-            withDuration:(float)duration
-              afterDelay:(float)delay
-                finished:(void (^)(BOOL finished))finishedBlock{
+- (void)animateToViewMode:(UIViewContentMode)contenMode
+                 forFrame:(CGRect)frame
+             withDuration:(float)duration
+               afterDelay:(float)delay
+                 finished:(void (^)(BOOL finished))finishedBlock
+{
     [self checkImageViewHasImage];
     
     switch (contenMode) {
-        case UIViewContentModeScaleAspectFill:{
+        case UIViewContentModeScaleAspectFill:
+        {
             [self initToScaleAspectFillToFrame:frame];
             [UIView animateWithDuration:duration animations:^{
                 [self animateToScaleAspectFill];
@@ -59,23 +41,61 @@
             }];
         }
             break;
-        case UIViewContentModeScaleAspectFit:{
+        case UIViewContentModeScaleAspectFit:
+        {
             [self initToScaleAspectFitToFrame:frame];
             [UIView animateWithDuration:duration animations:^{
                 [self animateToScaleAspectFit];
             } completion:^(BOOL finished) {
                 finishedBlock(YES);
-                
             }];
         }
             break;
-            
         default:
             break;
     }
-    
 }
--(void)checkImageViewHasImage{
+
+- (void)setImage:(UIImage *)image
+{
+    self.imageView.image = image;
+}
+
+- (UIImage *)image
+{
+    return self.imageView.image;
+}
+
+- (void)setContentMode:(UIViewContentMode)contentMode
+{
+    self.imageView.contentMode = contentMode;
+}
+
+- (UIViewContentMode)contentMode
+{
+    return self.imageView.contentMode;
+}
+
+- (void)setFrame:(CGRect)frame
+{
+    [super setFrame:frame];
+    self.imageView.frame = CGRectMake(0, 0, frame.size.width, frame.size.height);
+}
+
+- (BOOL)choiseFunctionWithRationImg:(float)ratioImage forFrame:(CGRect)newFrame
+{
+    BOOL resultat = NO;
+    float ratioSelf = (newFrame.size.width)/(newFrame.size.height);
+    if (ratioImage < 1) {
+        if (ratioImage > ratioSelf ) resultat = true;
+    }else{
+        if (ratioImage > ratioSelf ) resultat = true;
+    }
+    return resultat;
+}
+
+- (void)checkImageViewHasImage
+{
     if (!self.imageView.image) {
         UIView *view = [[UIView alloc]initWithFrame:self.imageView.frame];
         view.backgroundColor = [UIColor whiteColor];
@@ -83,7 +103,8 @@
     }
 }
 
-- (void)initToScaleAspectFitToFrame:(CGRect)newFrame{
+- (void)initToScaleAspectFitToFrame:(CGRect)newFrame
+{
     [self checkImageViewHasImage];
     float ratioImage = (self.imageView.image.size.width)/(self.imageView.image.size.height);
     
@@ -96,10 +117,10 @@
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     self.changedFrameImage = CGRectMake(0, 0, newFrame.size.width, newFrame.size.height);
     self.changedFrameWrapper = newFrame;
-    
 }
 
-- (void)initToScaleAspectFillToFrame:(CGRect)newFrame{
+- (void)initToScaleAspectFillToFrame:(CGRect)newFrame
+{
     [self checkImageViewHasImage];
     
     float ratioImg = (self.imageView.image.size.width) / (self.imageView.image.size.height);
@@ -109,52 +130,51 @@
         self.changedFrameImage = CGRectMake(0, - (newFrame.size.width / ratioImg - newFrame.size.height) / 2.0f, newFrame.size.width, newFrame.size.width / ratioImg);
     }
     self.changedFrameWrapper = newFrame;
-    
+
 }
-- (void)animateToScaleAspectFit{
+
+- (void)animateToScaleAspectFit
+{
     self.imageView.frame = _changedFrameImage;
     [super setFrame:_changedFrameWrapper];
 }
 
-- (void)animateToScaleAspectFill{
+- (void)animateToScaleAspectFill
+{
     self.imageView.frame = _changedFrameImage;
     [super setFrame:_changedFrameWrapper];
 }
 
-- (void)animateFinishToScaleAspectFill{
+- (void)animateFinishToScaleAspectFill
+{
     self.imageView.contentMode = UIViewContentModeScaleAspectFill;
     self.imageView.frame  = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
 }
 
-- (void)setImage:(UIImage *)image{
-    self.imageView.image = image;
-}
+#pragma mark - Lifecycle
 
-- (UIImage *)image{
-    return self.imageView.image;
-}
-
-- (void)setContentMode:(UIViewContentMode)contentMode{
-    self.imageView.contentMode = contentMode;
-}
-
-- (UIViewContentMode)contentMode{
-    return self.imageView.contentMode;
-}
-
-- (void)setFrame:(CGRect)frame{
-    [super setFrame:frame];
-    self.imageView.frame = CGRectMake(0, 0, frame.size.width, frame.size.height);
-}
-
-- (BOOL)choiseFunctionWithRationImg:(float)ratioImage forFrame:(CGRect)newFrame{
-    BOOL resultat = NO;
-    float ratioSelf = (newFrame.size.width)/(newFrame.size.height);
-    if (ratioImage < 1) {
-        if (ratioImage > ratioSelf ) resultat = true;
-    }else{
-        if (ratioImage > ratioSelf ) resultat = true;
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        self.imageView = [[UIImageView alloc]init];
+        self.imageView.contentMode = UIViewContentModeCenter;
+        [self addSubview:self.imageView];
+        self.clipsToBounds = YES;
     }
-    return resultat;
+    return self;
 }
+
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
+        self.imageView.contentMode = UIViewContentModeCenter;
+        [self addSubview:self.imageView];
+        self.clipsToBounds = YES;
+    }
+    return self;
+}
+
 @end

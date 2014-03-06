@@ -18,10 +18,10 @@
 
 @interface MHGalleryImageViewerViewController()
 
-@property (nonatomic, strong) NSArray *galleryItems;
-@property (nonatomic, strong) UIActivityViewController *activityViewController;
-@property (nonatomic, strong) UIBarButtonItem *leftBarButton;
-@property (nonatomic, strong) UIBarButtonItem *rightBarButton;
+@property (nonatomic, strong) NSArray* galleryItems;
+@property (nonatomic, strong) UIActivityViewController* activityViewController;
+@property (nonatomic, strong) UIBarButtonItem* leftBarButton;
+@property (nonatomic, strong) UIBarButtonItem* rightBarButton;
 
 @end
 

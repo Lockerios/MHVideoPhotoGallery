@@ -128,7 +128,7 @@
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     cell.collectionView.collectionViewLayout = layout;
     
-    [cell.collectionView registerClass:[MHGalleryOverViewCell class] forCellWithReuseIdentifier:@"MHGalleryOverViewCell"];
+    [cell.collectionView registerClass:[MHGalleryViewCell class] forCellWithReuseIdentifier:@"MHGalleryOverViewCell"];
     
     cell.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     
@@ -146,7 +146,7 @@
     NSString *cellIdentifier = @"MHGalleryOverViewCell";
     cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
     NSIndexPath *indexPathNew = [NSIndexPath indexPathForRow:indexPath.row inSection:collectionView.tag];
-    [self makeOverViewDetailCell:(MHGalleryOverViewCell*)cell atIndexPath:indexPathNew];
+    [self makeOverViewDetailCell:(MHGalleryViewCell*)cell atIndexPath:indexPathNew];
     
     return cell;
 }
@@ -154,7 +154,7 @@
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     
-    UIImageView *imageView = [(MHGalleryOverViewCell*)[collectionView cellForItemAtIndexPath:indexPath] thumbnail];
+    UIImageView *imageView = [(MHGalleryViewCell*)[collectionView cellForItemAtIndexPath:indexPath] thumbnail];
     
     NSArray *galleryData = self.galleryDataSource[collectionView.tag];
     
@@ -162,8 +162,6 @@
                            forIndex:indexPath.row
                       fromImageView:imageView
                      finishCallback:^(UINavigationController *galleryNavMH, NSInteger pageIndex, UIImage *image,MHTransitionDismissMHGallery *interactiveDismissMHGallery) {
-                         
-                         
                          NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:pageIndex inSection:0];
                          CGRect cellFrame  = [[collectionView collectionViewLayout] layoutAttributesForItemAtIndexPath:newIndexPath].frame;
                          [collectionView scrollRectToVisible:cellFrame
@@ -173,7 +171,7 @@
                              [collectionView reloadItemsAtIndexPaths:@[newIndexPath]];
                              [collectionView scrollToItemAtIndexPath:newIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
                              
-                             MHGalleryOverViewCell *cell = (MHGalleryOverViewCell*)[collectionView cellForItemAtIndexPath:newIndexPath];
+                             MHGalleryViewCell *cell = (MHGalleryViewCell*)[collectionView cellForItemAtIndexPath:newIndexPath];
                              
                              [galleryNavMH dismissViewControllerAnimated:YES dismissImageView:cell.thumbnail completion:^{}];
                          });
@@ -190,7 +188,7 @@
 }
 
 
--(void)makeOverViewDetailCell:(MHGalleryOverViewCell*)cell atIndexPath:(NSIndexPath*)indexPath{
+-(void)makeOverViewDetailCell:(MHGalleryViewCell*)cell atIndexPath:(NSIndexPath*)indexPath{
     MHGalleryItem *item = self.galleryDataSource[indexPath.section][indexPath.row];
     
     [cell.thumbnail setContentMode:UIViewContentModeScaleAspectFill];

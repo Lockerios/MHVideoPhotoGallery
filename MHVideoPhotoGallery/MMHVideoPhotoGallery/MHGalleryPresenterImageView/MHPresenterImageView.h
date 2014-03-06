@@ -10,7 +10,6 @@
 #import "MHTransitionPresentMHGallery.h"
 #import "MHTransitionDismissMHGallery.h"
 
-@class MHTransitionPresentMHGallery;
 @class MHTransitionDismissMHGallery;
 
 @interface MHPresenterImageView : UIImageView <UIGestureRecognizerDelegate>
@@ -38,4 +37,5 @@
                           currentViewController:(UIViewController*)viewController
                                  finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex,UIImage *image,MHTransitionDismissMHGallery *interactiveDismissMHGallery)
                                                  )FinishBlock;
+
 @end

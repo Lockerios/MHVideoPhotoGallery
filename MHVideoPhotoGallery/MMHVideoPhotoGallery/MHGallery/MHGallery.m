@@ -5,21 +5,6 @@
 #import "SDWebImageDecoder.h"
 #import <objc/runtime.h>
 
-NSDictionary *MHDictionaryForQueryString(NSString *string){
-	NSMutableDictionary *dictionary = [NSMutableDictionary new];
-	NSArray *allFieldsArray = [string componentsSeparatedByString:@"&"];
-	for (NSString *fieldString in allFieldsArray){
-		NSArray *pairArray = [fieldString componentsSeparatedByString:@"="];
-		if (pairArray.count == 2){
-			NSString *key = pairArray[0];
-			NSString *value = [pairArray[1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-			value = [value stringByReplacingOccurrencesOfString:@"+" withString:@" "];
-			dictionary[key] = value;
-		}
-	}
-	return dictionary;
-}
-
 NSBundle *MHGalleryBundle(void) {
     static NSBundle *bundle = nil;
     static dispatch_once_t onceToken;
@@ -88,37 +73,6 @@ UIImage *MHGalleryImage(NSString *imageName){
     return sharedManagerInstance;
 }
 
--(void)presentMHGalleryWithItems:(NSArray*)galleryItems
-                        forIndex:(NSInteger)index
-        andCurrentViewController:(id)viewcontroller
-                  finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex,MHTransitionDismissMHGallery *interactiveTransition,UIImage *image)
-                                  )FinishBlock
-        withImageViewTransiation:(BOOL)animated{
-
-    self.animateWithCustomTransition =animated;
-    self.oldStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
-    
-    self.galleryItems =galleryItems;
-    
-    MHGalleryImageViewerViewController *detail = [MHGalleryImageViewerViewController new];
-    detail.pageIndex = index;
-    detail.finishedCallback = ^(UINavigationController *galleryNavMH,NSUInteger photoIndex,MHTransitionDismissMHGallery *interactiveTransition,UIImage *image) {
-        FinishBlock(galleryNavMH,photoIndex,interactiveTransition,image);
-    };
-    
-    UINavigationController *nav = [UINavigationController new];
-    
-    nav.viewControllers = @[detail];
-    
-    if (animated) {
-        if (MHiOS7) {
-            nav.transitioningDelegate = viewcontroller;
-        }
-        nav.modalPresentationStyle = UIModalPresentationFullScreen;
-    }
-    [viewcontroller presentViewController:nav animated:YES completion:nil];
-}
-
 -(NSString*)languageIdentifier{
 	static NSString *applicationLanguageIdentifier;
 	static dispatch_once_t onceToken;
@@ -168,12 +122,12 @@ UIImage *MHGalleryImage(NSString *imageName){
         withInteractiveTranstion:(MHTransitionPresentMHGallery*)presentInteractive
                   finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex,UIImage *image,MHTransitionDismissMHGallery *interactiveDismissMHGallery)
                                   )FinishBlock
-        customAnimationFromImage:(BOOL)animated{
-    
-    [MHGalleryDataManager sharedDataManager].animateWithCustomTransition =animated;
+        customAnimationFromImage:(BOOL)animated
+{
+    [MHGalleryDataManager sharedDataManager].animateWithCustomTransition = animated;
     [MHGalleryDataManager sharedDataManager].oldStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
     
-    [MHGalleryDataManager sharedDataManager].galleryItems =galleryItems;
+    [MHGalleryDataManager sharedDataManager].galleryItems = galleryItems;
     
     MHGalleryImageViewerViewController *detail = [MHGalleryImageViewerViewController new];
     detail.interactivePresentationTranstion = presentInteractive;

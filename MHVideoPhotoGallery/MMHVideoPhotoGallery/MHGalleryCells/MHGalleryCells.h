@@ -8,18 +8,23 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MHGalleryOverViewCell : UICollectionViewCell
-@property (nonatomic, strong) UIImageView             *thumbnail;
-@property (nonatomic, strong) UIActivityIndicatorView *act;
-@property (nonatomic, strong) UIButton                *playButton;
-@property (nonatomic, strong) UILabel                 *videoDurationLength;
-@property (nonatomic, strong) UIImageView             *videoIcon;
-@property (nonatomic, strong) UIView                  *videoGradient;
-@property (nonatomic, strong) UIImageView             *selectionImageView;
+@interface MHGalleryViewCell : UICollectionViewCell
+
+@property (nonatomic, strong) UIImageView*  thumbnail;
+@property (nonatomic, strong) UIActivityIndicatorView* act;
+@property (nonatomic, strong) UIButton* playButton;
+@property (nonatomic, strong) UILabel* videoDurationLength;
+@property (nonatomic, strong) UIImageView* videoIcon;
+@property (nonatomic, strong) UIView* videoGradient;
+@property (nonatomic, strong) UIImageView* selectionImageView;
 
 @property (nonatomic, copy) void (^saveImage)(BOOL shouldSave);
+
 @end
 
-@interface MHGalleryCollectionViewCell : UITableViewCell
-@property (strong, nonatomic) UICollectionView *collectionView;
+
+@interface MHGalleryTableViewCell : UITableViewCell
+
+@property (strong, nonatomic) UICollectionView* collectionView;
+
 @end
