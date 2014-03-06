@@ -37,7 +37,6 @@
 		F53F926517EB008100A9FE6A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F53F924717EB008100A9FE6A /* UIKit.framework */; };
 		F53F926D17EB008100A9FE6A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F53F926B17EB008100A9FE6A /* InfoPlist.strings */; };
 		F53F926F17EB008100A9FE6A /* MHVideoPhotoGalleryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F53F926E17EB008100A9FE6A /* MHVideoPhotoGalleryTests.m */; };
-		F54337CE18A3FA9100CA1DAB /* UIImageView+MHGallery.m in Sources */ = {isa = PBXBuildFile; fileRef = F54337CD18A3FA9100CA1DAB /* UIImageView+MHGallery.m */; };
 		F553D2FC1892B58800BA4283 /* activityMH.png in Resources */ = {isa = PBXBuildFile; fileRef = F553D2DB1892B58800BA4283 /* activityMH.png */; };
 		F553D2FD1892B58800BA4283 /* activtyMH@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F553D2DC1892B58800BA4283 /* activtyMH@2x.png */; };
 		F553D2FE1892B58800BA4283 /* EditControl.png in Resources */ = {isa = PBXBuildFile; fileRef = F553D2DD1892B58800BA4283 /* EditControl.png */; };
@@ -146,8 +145,6 @@
 		F53F926A17EB008100A9FE6A /* MHVideoPhotoGalleryTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MHVideoPhotoGalleryTests-Info.plist"; sourceTree = "<group>"; };
 		F53F926C17EB008100A9FE6A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F53F926E17EB008100A9FE6A /* MHVideoPhotoGalleryTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MHVideoPhotoGalleryTests.m; sourceTree = "<group>"; };
-		F54337CC18A3FA9100CA1DAB /* UIImageView+MHGallery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImageView+MHGallery.h"; path = "MMHVideoPhotoGallery/UIImageView+MHGallery/UIImageView+MHGallery.h"; sourceTree = "<group>"; };
-		F54337CD18A3FA9100CA1DAB /* UIImageView+MHGallery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+MHGallery.m"; path = "MMHVideoPhotoGallery/UIImageView+MHGallery/UIImageView+MHGallery.m"; sourceTree = "<group>"; };
 		F553D2DB1892B58800BA4283 /* activityMH.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = activityMH.png; path = MMHVideoPhotoGallery/Images/activityMH.png; sourceTree = "<group>"; };
 		F553D2DC1892B58800BA4283 /* activtyMH@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "activtyMH@2x.png"; path = "MMHVideoPhotoGallery/Images/activtyMH@2x.png"; sourceTree = "<group>"; };
 		F553D2DD1892B58800BA4283 /* EditControl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = EditControl.png; path = MMHVideoPhotoGallery/Images/EditControl.png; sourceTree = "<group>"; };
@@ -372,15 +369,6 @@
 			name = Transitions;
 			sourceTree = "<group>";
 		};
-		F54337CB18A3FA5700CA1DAB /* UIImageView+MHGallery */ = {
-			isa = PBXGroup;
-			children = (
-				F54337CC18A3FA9100CA1DAB /* UIImageView+MHGallery.h */,
-				F54337CD18A3FA9100CA1DAB /* UIImageView+MHGallery.m */,
-			);
-			name = "UIImageView+MHGallery";
-			sourceTree = "<group>";
-		};
 		F553D2DA1892B57E00BA4283 /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -432,7 +420,6 @@
 				F5DBBF19187D56DB00BEFE29 /* MHGallery */,
 				F5DBBF14187D568100BEFE29 /* MHGalleryCells */,
 				F5415D8A186DB65600BB8B52 /* Transitions */,
-				F54337CB18A3FA5700CA1DAB /* UIImageView+MHGallery */,
 				F5245D9018AA1664004C6FFA /* External */,
 				F553D2DA1892B57E00BA4283 /* Images */,
 				F5D9AB5018B665A80014AAC6 /* MHGallery.bundle */,
@@ -631,7 +618,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F54337CE18A3FA9100CA1DAB /* UIImageView+MHGallery.m in Sources */,
 				F5245DB118AA16D3004C6FFA /* SDWebImageManager.m in Sources */,
 				F5245DAE18AA16D3004C6FFA /* SDWebImageDecoder.m in Sources */,
 				F5245DB218AA16D3004C6FFA /* SDWebImagePrefetcher.m in Sources */,
