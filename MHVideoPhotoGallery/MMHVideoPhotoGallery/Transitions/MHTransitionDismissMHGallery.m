@@ -172,33 +172,15 @@
         self.toTransform = self.startTransform;
     }
     
-    if (imageViewerCurrent.isPlayingVideo && imageViewerCurrent.moviePlayer) {
-        self.moviePlayer = imageViewerCurrent.moviePlayer;
-        [self.moviePlayer.view setFrame:AVMakeRectWithAspectRatioInsideRect(imageViewerCurrent.moviePlayer.naturalSize,fromViewController.view.bounds)];
-        
-        self.startFrame = self.moviePlayer.view.frame;
-        
-        [self.containerView addSubview:self.moviePlayer.view];
-        self.transitionImageView.hidden = YES;
-    }else{
-        [self.containerView addSubview:self.cellImageSnapshot];
-        self.transitionImageView.hidden = YES;
-    }
+    [self.containerView addSubview:self.cellImageSnapshot];
+    self.transitionImageView.hidden = YES;
     self.navFrame = fromViewController.navigationBar.frame;
     if (self.toTransform != self.orientationTransformBeforeDismiss) {
-        if (self.moviePlayer) {
-            [self.moviePlayer.view setFrame:AVMakeRectWithAspectRatioInsideRect(imageViewerCurrent.moviePlayer.naturalSize,CGRectMake(0, 0, fromViewController.view.bounds.size.width, fromViewController.view.bounds.size.height))];
-            self.moviePlayer.view.transform = CGAffineTransformMakeRotation(self.orientationTransformBeforeDismiss);
-            self.moviePlayer.view.center = [UIApplication sharedApplication].keyWindow.center;
-            self.startFrame = self.moviePlayer.view.bounds;
-            
-        }else{
-            [self.cellImageSnapshot setFrame:AVMakeRectWithAspectRatioInsideRect(self.cellImageSnapshot.image.size,CGRectMake(0, 0, fromViewController.view.bounds.size.width, fromViewController.view.bounds.size.height))];
-            self.cellImageSnapshot.transform = CGAffineTransformMakeRotation(self.orientationTransformBeforeDismiss);
-            self.cellImageSnapshot.center = [UIApplication sharedApplication].keyWindow.center;
-            self.startFrame = self.cellImageSnapshot.bounds;
-            
-        }
+        [self.cellImageSnapshot setFrame:AVMakeRectWithAspectRatioInsideRect(self.cellImageSnapshot.image.size,CGRectMake(0, 0, fromViewController.view.bounds.size.width, fromViewController.view.bounds.size.height))];
+        self.cellImageSnapshot.transform = CGAffineTransformMakeRotation(self.orientationTransformBeforeDismiss);
+        self.cellImageSnapshot.center = [UIApplication sharedApplication].keyWindow.center;
+        self.startFrame = self.cellImageSnapshot.bounds;
+        
         self.startTransform = self.orientationTransformBeforeDismiss;
     }
     

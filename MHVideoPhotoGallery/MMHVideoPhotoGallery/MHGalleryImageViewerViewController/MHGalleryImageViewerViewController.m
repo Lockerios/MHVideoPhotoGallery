@@ -17,7 +17,6 @@
 @property (nonatomic, strong) UIActivityViewController *activityViewController;
 @property (nonatomic, strong) UIBarButtonItem *leftBarButton;
 @property (nonatomic, strong) UIBarButtonItem *rightBarButton;
-@property (nonatomic, strong) UIBarButtonItem *playStopBarButton;
 @end
 
 @implementation MHGalleryImageViewerViewController
@@ -57,9 +56,7 @@
 
 -(void)donePressed{
     ImageViewController *imageViewer = self.pvc.viewControllers.firstObject;
-    if (imageViewer.moviePlayer) {
-        [imageViewer removeAllMoviePlayerViewsAndNotifications];
-    }
+    
     MHTransitionDismissMHGallery *dismissTransiton = [MHTransitionDismissMHGallery new];
     dismissTransiton.orientationTransformBeforeDismiss = [(NSNumber *)[self.navigationController.view valueForKeyPath:@"layer.transform.rotation.z"] floatValue];
     self.finishedCallback(self.navigationController,self.pageIndex,dismissTransiton,imageViewer.imageView.image);
@@ -115,9 +112,6 @@
     self.tb.tag = 307;
     self.tb.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
     
-    self.playStopBarButton = [[UIBarButtonItem alloc]initWithImage:MHGalleryImage(@"play") style:UIBarButtonItemStyleBordered target:self action:@selector(playStopButtonPressed)];
-    
-    
     self.leftBarButton = [[UIBarButtonItem alloc]initWithImage:MHGalleryImage(@"left_arrow")
                                                 style:UIBarButtonItemStyleBordered
                                                target:self
@@ -132,11 +126,7 @@
                                                                          target:self
                                                                          action:nil];
     
-    if (item.galleryType == MHGalleryTypeVideo) {
-        [self.tb setItems:@[flex,self.leftBarButton,flex,self.playStopBarButton,flex,self.rightBarButton,flex]];
-    }else{
-        [self.tb setItems:@[flex,self.leftBarButton,flex,self.rightBarButton,flex]];
-    }
+    [self.tb setItems:@[flex,self.leftBarButton,flex,self.rightBarButton,flex]];
     
     if (self.pageIndex == 0) {
         self.leftBarButton.enabled =NO;
@@ -183,27 +173,6 @@
         }
     }
     return ([touch.view isKindOfClass:[UIControl class]] == NO);
-}
-
--(void)changeToPlayButton{
-    self.playStopBarButton.image = MHGalleryImage(@"play");
-}
-
--(void)changeToPauseButton{
-    self.playStopBarButton.image = MHGalleryImage(@"pause");
-}
-
--(void)playStopButtonPressed{
-    for (ImageViewController *imageViewController in self.pvc.viewControllers) {
-        if (imageViewController.pageIndex == self.pageIndex) {
-            if (imageViewController.isPlayingVideo) {
-                [imageViewController stopMovie];
-                [self changeToPlayButton];
-            }else{
-                [imageViewController playButtonPressed];
-            }
-        }
-    }
 }
 
 -(void)updateDescriptionLabelForIndex:(NSInteger)index{
@@ -266,37 +235,14 @@
     
     self.pageIndex = [[pageViewController.viewControllers firstObject] pageIndex];
     
-    if (finished) {
-        for (ImageViewController *imageViewController in previousViewControllers) {
-            [self removeVideoPlayerForVC:imageViewController];
-        }
-    }
     if (completed) {
         [self updateToolBarForItem:self.galleryItems[self.pageIndex]];
     }
 }
 
--(void)removeVideoPlayerForVC:(ImageViewController*)vc{
-    if (vc.pageIndex != self.pageIndex) {
-        if (vc.moviePlayer) {
-            if (vc.item.galleryType == MHGalleryTypeVideo) {
-                if (vc.isPlayingVideo) {
-                    [vc stopMovie];
-                }
-                vc.currentTimeMovie =0;
-            }
-        }
-    }
-}
-
 -(void)updateToolBarForItem:(MHGalleryItem*)item{
     UIBarButtonItem *flex = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
-    if (item.galleryType == MHGalleryTypeVideo) {
-        [self changeToPlayButton];
-        [self.tb setItems:@[flex,self.leftBarButton,flex,self.playStopBarButton,flex,self.rightBarButton,flex]];
-    }else{
-        [self.tb setItems:@[flex,self.leftBarButton,flex,self.rightBarButton,flex]];
-    }
+    [self.tb setItems:@[flex,self.leftBarButton,flex,self.rightBarButton,flex]];
 }
 
 
@@ -315,11 +261,6 @@
                                   animationControllerForOperation:(UINavigationControllerOperation)operation
                                                fromViewController:(UIViewController *)fromVC
                                                  toViewController:(UIViewController *)toVC {
-    
-    ImageViewController *theCurrentViewController = [self.pvc.viewControllers firstObject];
-    if (theCurrentViewController.moviePlayer) {
-        [theCurrentViewController removeAllMoviePlayerViewsAndNotifications];
-    }
     return nil;
 }
 
@@ -339,7 +280,6 @@
     
     [self.pvc setViewControllers:@[imageViewController] direction:UIPageViewControllerNavigationDirectionReverse animated:YES completion:^(BOOL finished) {
         blockSelf.pageIndex = imageViewController.pageIndex;
-        [blockSelf changeToPlayButton];
     }];
 }
 
@@ -358,7 +298,6 @@
     
     [self.pvc setViewControllers:@[imageViewController] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:^(BOOL finished) {
         blockSelf.pageIndex = imageViewController.pageIndex;
-        [blockSelf changeToPlayButton];
     }];
 }
 
@@ -366,7 +305,6 @@
 - (UIViewController *)pageViewController:(UIPageViewController *)pvc viewControllerBeforeViewController:(ImageViewController *)vc{
     self.leftBarButton.enabled =YES;
     self.rightBarButton.enabled =YES;
-    [self removeVideoPlayerForVC:vc];
     
     NSInteger indexPage = vc.pageIndex;
     
@@ -388,7 +326,6 @@
 - (UIViewController *)pageViewController:(UIPageViewController *)pvc viewControllerAfterViewController:(ImageViewController *)vc{
     self.leftBarButton.enabled = YES;
     self.rightBarButton.enabled = YES;
-    [self removeVideoPlayerForVC:vc];
     
     
     NSInteger indexPage = vc.pageIndex;
@@ -416,25 +353,15 @@
 @end
 
 @interface ImageViewController ()
-@property (nonatomic, strong) UIButton                 *moviewPlayerButtonBehinde;
-@property (nonatomic, strong) UIToolbar                *moviePlayerToolBarTop;
-@property (nonatomic, strong) UISlider                 *slider;
-@property (nonatomic, strong) UIProgressView           *videoProgressView;
-@property (nonatomic, strong) UILabel                  *leftSliderLabel;
-@property (nonatomic, strong) UILabel                  *rightSliderLabel;
 @property (nonatomic, strong) NSNumberFormatter        *numberFormatter;
-@property (nonatomic, strong) NSTimer                  *movieTimer;
-@property (nonatomic, strong) NSTimer                  *movieDownloadedTimer;
 @property (nonatomic,strong ) UIPanGestureRecognizer   *pan;
 @property (nonatomic,strong ) MHPinchGestureRecognizer *pinch;
 
-@property (nonatomic)         NSInteger                wholeTimeMovie;
 @property (nonatomic)         CGPoint                  pointToCenterAfterResize;
 @property (nonatomic)         CGFloat                  scaleToRestoreAfterResize;
 @property (nonatomic)         CGPoint                  startPoint;
 @property (nonatomic)         CGPoint                  lastPoint;
 @property (nonatomic)         CGPoint                  lastPointPop;
-@property (nonatomic)         BOOL                     shouldPlayVideo;
 
 @end
 
@@ -596,8 +523,6 @@
     if (self) {
         self.view.backgroundColor = [UIColor blackColor];
         
-        self.shouldPlayVideo = NO;
-        
         self.numberFormatter = [NSNumberFormatter new];
         [self.numberFormatter setMinimumIntegerDigits:2];
         
@@ -651,55 +576,6 @@
         [self.act setAutoresizingMask:UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth];
         [self.scrollView addSubview:self.act];
         
-        if (self.item.galleryType != MHGalleryTypeImage) {
-            [self addPlayButtonToView];
-            
-            self.moviePlayerToolBarTop = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, 44)];
-            [self.moviePlayerToolBarTop setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
-            self.moviePlayerToolBarTop.alpha =0;
-            [self.view addSubview:self.moviePlayerToolBarTop];
-            
-            self.currentTimeMovie =0;
-            self.wholeTimeMovie =0;
-            
-            self.videoProgressView = [[UIProgressView alloc]initWithFrame:CGRectMake(57, 21, self.view.frame.size.width-114, 3)];
-            [self.videoProgressView.layer setBorderWidth:0.5];
-            [self.videoProgressView.layer setBorderColor:[UIColor colorWithWhite:0 alpha:0.3].CGColor];
-            [self.videoProgressView setTrackTintColor:[UIColor clearColor]];
-            [self.videoProgressView setProgressTintColor:[UIColor colorWithWhite:0 alpha:0.3]];
-            [self.videoProgressView setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
-            
-            [self.moviePlayerToolBarTop addSubview:self.videoProgressView];
-            
-            self.slider = [[UISlider alloc]initWithFrame:CGRectMake(55, 0, self.view.frame.size.width-110, 44)];
-            [self.slider setMaximumValue:10];
-            
-            [self.slider setMinimumValue:0];
-            [self.slider setMinimumTrackTintColor:[UIColor blackColor]];
-            [self.slider setMaximumTrackTintColor:[UIColor clearColor]];
-            [self.slider setThumbImage:MHGalleryImage(@"sliderPoint") forState:UIControlStateNormal];
-            [self.slider addTarget:self action:@selector(sliderDidChange:) forControlEvents:UIControlEventValueChanged];
-            [self.slider addTarget:self action:@selector(sliderDidDragExit:) forControlEvents:UIControlEventTouchUpInside];
-            [self.slider setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
-            [self.moviePlayerToolBarTop addSubview:self.slider];
-            
-            self.leftSliderLabel = [[UILabel alloc]initWithFrame:CGRectMake(8, 0, 40, 43)];
-            
-            [self.leftSliderLabel setFont:[UIFont systemFontOfSize:14]];
-            [self.leftSliderLabel setText:@"00:00"];
-            [self.moviePlayerToolBarTop addSubview:self.leftSliderLabel];
-            
-            self.rightSliderLabel = [[UILabel alloc]initWithFrame:CGRectZero];
-            self.rightSliderLabel.frame =CGRectMake(self.vc.view.frame.size.width-50, 0, 50, 43);
-            [self.rightSliderLabel setFont:[UIFont systemFontOfSize:14]];
-            [self.rightSliderLabel setText:@"-00:00"];
-            self.rightSliderLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin;
-            [self.moviePlayerToolBarTop addSubview:self.rightSliderLabel];
-            
-            [self.scrollView setMaximumZoomScale:1];
-            [self.scrollView setMinimumZoomScale:1];
-        }
-        
         [self.imageView setUserInteractionEnabled:YES];
         
         [imageTap requireGestureRecognizerToFail: doubleTap];
@@ -712,35 +588,19 @@
                                                                     self.imageView.image = image;
                                                                 }];
         }else{
-            if (self.item.galleryType == MHGalleryTypeImage) {
-
-                [[SDWebImageManager sharedManager] downloadWithURL:[NSURL URLWithString:self.item.urlString]
-                                                           options:SDWebImageContinueInBackground
-                                                          progress:nil
-                                                         completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
-                                                             if (!image) {
-                                                                 [self.scrollView setMaximumZoomScale:1];
-                                                                 [self changeToErrorImage];
-                                                                 
-                                                             }else{
-                                                                 self.imageView.image = image;
-                                                             }
-                                                             [(UIActivityIndicatorView*)[self.scrollView viewWithTag:507] stopAnimating];
-                                                         }];
-            }else{
-                
-                [[MHGalleryDataManager sharedDataManager] startDownloadingThumbImage:self.item.urlString
-                                                                      successBlock:^(UIImage *image,NSUInteger videoDuration,NSError *error,NSString *newURL) {
-                                                                          if (!error) {
-                                                                              [self handleGeneratedThumb:image
-                                                                                           videoDuration:videoDuration
-                                                                                               urlString:newURL];
-                                                                          }else{
-                                                                              [self changeToErrorImage];
-                                                                          }
-                                                                          [(UIActivityIndicatorView*)[self.scrollView viewWithTag:507] stopAnimating];
-                                                                      }];
-            }
+            [[SDWebImageManager sharedManager] downloadWithURL:[NSURL URLWithString:self.item.urlString]
+                                                       options:SDWebImageContinueInBackground
+                                                      progress:nil
+                                                     completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
+                                                         if (!image) {
+                                                             [self.scrollView setMaximumZoomScale:1];
+                                                             [self changeToErrorImage];
+                                                             
+                                                         }else{
+                                                             self.imageView.image = image;
+                                                         }
+                                                         [(UIActivityIndicatorView*)[self.scrollView viewWithTag:507] stopAnimating];
+                                                     }];
         }
     }
     
@@ -750,63 +610,11 @@
     self.imageView.image = MHGalleryImage(@"error");
 }
 
--(void)changePlayButtonToUnPlay{
-    [self.playButton setImage:MHGalleryImage(@"unplay")
-                     forState:UIControlStateNormal];
-}
-
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    if (!self.moviePlayer && self.item.galleryType == MHGalleryTypeVideo) {
-        if ([self.item.urlString rangeOfString:@"vimeo.com"].location != NSNotFound) {
-            [[MHGalleryDataManager sharedDataManager] getVimeoURLforMediaPlayer:self.item.urlString
-                                                                 successBlock:^(NSURL *URL, NSError *error) {
-                                                                     if (error) {
-                                                                         [self changePlayButtonToUnPlay];
-                                                                     }else{
-                                                                         [self addMoviePlayerToViewWithURL:URL];
-                                                                     }
-                                                                 }];
-        }else if ([self.item.urlString rangeOfString:@"youtube.com"].location != NSNotFound) {
-            [[MHGalleryDataManager sharedDataManager] getYoutubeURLforMediaPlayer:self.item.urlString
-                                                                   successBlock:^(NSURL *URL, NSError *error) {
-                                                                       if (error) {
-                                                                           [self changePlayButtonToUnPlay];
-                                                                       }else{
-                                                                           [self addMoviePlayerToViewWithURL:URL];
-                                                                       }
-                                                                   }];
-        }else{
-            [self addMoviePlayerToViewWithURL:[NSURL  URLWithString:self.item.urlString]];
-        }
-    }
 }
 
--(void)handleGeneratedThumb:(UIImage*)image
-              videoDuration:(NSInteger)videoDuration
-                  urlString:(NSString*)urlString{
-    self.wholeTimeMovie = videoDuration;
-    NSNumber *minutes = @(videoDuration / 60);
-    NSNumber *seconds = @(videoDuration % 60);
-    
-    self.rightSliderLabel.text = [NSString stringWithFormat:@"-%@:%@",
-                                  [self.numberFormatter stringFromNumber:minutes] ,[self.numberFormatter stringFromNumber:seconds]];
-    
-    [self.slider setMaximumValue:videoDuration];
-    [[self.view viewWithTag:508]setHidden:NO];
-    self.imageView.image = image;
-    
-    self.playButton.frame = CGRectMake(self.vc.view.frame.size.width/2-36, self.vc.view.frame.size.height/2-36, 72, 72);
-    self.playButton.hidden =NO;
-    [(UIActivityIndicatorView*)[self.scrollView viewWithTag:507] stopAnimating];
-}
 -(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-//    if (self.interactiveOverView) {
-//        if ([gestureRecognizer isKindOfClass:[MHPinchGestureRecognizer class]]) {
-//            return YES;
-//        }
-//        return NO;
-//    }
     if (self.interactiveTransition) {
         if ([gestureRecognizer isEqual:self.pan]) {
             return YES;
@@ -823,23 +631,13 @@
     return NO;
 }
 -(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
-    
-//    if (self.interactiveOverView) {
-//        if ([gestureRecognizer isKindOfClass:[MHPinchGestureRecognizer class]]) {
-//            return YES;
-//        }else{
-//            return NO;
-//        }
-//    }else{
-        if ([gestureRecognizer isKindOfClass:[MHPinchGestureRecognizer class]]) {
-            if ([gestureRecognizer isKindOfClass:[MHPinchGestureRecognizer class]] && self.scrollView.zoomScale ==1) {
-                return YES;
-            }else{
-                return NO;
-            }
+    if ([gestureRecognizer isKindOfClass:[MHPinchGestureRecognizer class]]) {
+        if ([gestureRecognizer isKindOfClass:[MHPinchGestureRecognizer class]] && self.scrollView.zoomScale ==1) {
+            return YES;
+        }else{
+            return NO;
         }
-        
-//    }
+    }
     if (self.vc.isUserScrolling) {
         if ([gestureRecognizer isEqual:self.pan]) {
             return NO;
@@ -884,343 +682,15 @@
     return NO;
 }
 
--(void)sliderDidDragExit:(UISlider*)slider{
-    if (self.playingVideo) {
-        [self.moviePlayer play];
-    }
-}
--(void)sliderDidChange:(UISlider*)slider{
-    if (self.moviePlayer) {
-        [self.moviePlayer pause];
-        [self.moviePlayer setCurrentPlaybackTime:slider.value];
-        self.currentTimeMovie = slider.value;
-        [self updateTimerLabels];
-    }
-}
-
--(void)stopMovie{
-    
-    self.shouldPlayVideo = NO;
-    
-    [self stopTimer];
-    
-    self.playingVideo = NO;
-    [self.moviePlayer pause];
-    
-    [self.view bringSubviewToFront:self.playButton];
-    [self.view bringSubviewToFront:self.moviePlayerToolBarTop];
-    [self.vc changeToPlayButton];
-}
-
--(void)changeToPlayable{
-    self.videoWasPlayable = YES;
-    if(!self.vc.isHiddingToolBarAndNavigationBar){
-        self.moviePlayerToolBarTop.alpha =1;
-    }
-    
-    [self.moviePlayer.view setHidden:NO];
-    [self.view bringSubviewToFront:self.moviePlayer.view];
-    
-    self.moviewPlayerButtonBehinde = [[UIButton alloc]initWithFrame:self.view.bounds];
-    [self.moviewPlayerButtonBehinde addTarget:self action:@selector(handelImageTap:) forControlEvents:UIControlEventTouchUpInside];
-    [self.moviewPlayerButtonBehinde setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
-    
-    [self.view bringSubviewToFront:self.scrollView];
-    [self.view addSubview:self.moviewPlayerButtonBehinde];
-    [self.view bringSubviewToFront:self.moviePlayerToolBarTop];
-    [self.view bringSubviewToFront:self.playButton];
-    if([MHGalleryDataManager sharedDataManager].animateWithCustomTransition){
-        [self.moviewPlayerButtonBehinde addGestureRecognizer:self.pan];
-    }
-    
-    if(self.playingVideo){
-        [self.view bringSubviewToFront:self.moviePlayer.view];
-        [self.view bringSubviewToFront:self.moviewPlayerButtonBehinde];
-        [self.view bringSubviewToFront:self.moviePlayerToolBarTop];
-    }
-    if (self.shouldPlayVideo) {
-        self.shouldPlayVideo = NO;
-        if (self.pageIndex == self.vc.pageIndex) {
-            [self playButtonPressed];
-            [self.view viewWithTag:304];
-        }
-    }
-    
-    
-}
-
-- (void)loadStateDidChange:(NSNotification *)notification{
-	MPMoviePlayerController *player = notification.object;
-	MPMovieLoadState loadState = player.loadState;
-	if (loadState & MPMovieLoadStatePlayable){
-        if (!self.videoWasPlayable) {
-            [self performSelectorOnMainThread:@selector(changeToPlayable)
-                                   withObject:nil
-                                waitUntilDone:YES];
-        }
-        
-	}
-    if (loadState & MPMovieLoadStatePlaythroughOK){
-        
-        self.videoDownloaded = YES;
-	}
-	
-	if (loadState & MPMovieLoadStateStalled){
-        
-        [self performSelectorOnMainThread:@selector(stopMovie)
-                               withObject:nil
-                            waitUntilDone:YES];
-	}
-}
-
--(void)updateTimerLabels{
-    
-    if (self.currentTimeMovie <=0) {
-        self.leftSliderLabel.text =@"00:00";
-        
-        NSNumber *minutes = @(self.wholeTimeMovie / 60);
-        NSNumber *seconds = @(self.wholeTimeMovie % 60);
-        
-        self.rightSliderLabel.text = [NSString stringWithFormat:@"-%@:%@",
-                                      [self.numberFormatter stringFromNumber:minutes] ,
-                                      [self.numberFormatter stringFromNumber:seconds]];
-        
-    }else{
-        NSNumber *minutesGo = @(self.currentTimeMovie / 60);
-        NSNumber *secondsGo = @(self.currentTimeMovie % 60);
-        
-        self.leftSliderLabel.text = [NSString stringWithFormat:@"%@:%@",
-                                     [self.numberFormatter stringFromNumber:minutesGo] ,
-                                     [self.numberFormatter stringFromNumber:secondsGo]];
-        
-        NSNumber *minutes = @((self.wholeTimeMovie-self.currentTimeMovie) / 60);
-        NSNumber *seconds = @((self.wholeTimeMovie-self.currentTimeMovie) % 60);
-        
-        
-        self.rightSliderLabel.text = [NSString stringWithFormat:@"-%@:%@",
-                                      [self.numberFormatter stringFromNumber:minutes] ,
-                                      [self.numberFormatter stringFromNumber:seconds]];
-    }
-}
-
-
-
--(void)changeProgressBehinde:(NSTimer*)timer{
-    if (self.moviePlayer.playableDuration !=0) {
-        [self.videoProgressView setProgress:self.moviePlayer.playableDuration/self.moviePlayer.duration];
-        if ((self.moviePlayer.playableDuration == self.moviePlayer.duration)&& (self.moviePlayer.duration !=0)) {
-            [self stopMovieDownloadTimer];
-        }
-    }
-}
-
--(void)movieTimerChanged:(NSTimer*)timer{
-    self.currentTimeMovie = self.moviePlayer.currentPlaybackTime;
-    if (!self.slider.isTracking) {
-        [self.slider setValue:self.moviePlayer.currentPlaybackTime animated:NO];
-    }
-    [self updateTimerLabels];
-}
-
--(void)addPlayButtonToView{
-    if (self.playButton) {
-        [self.playButton removeFromSuperview];
-    }
-    self.playButton = [[UIButton alloc]initWithFrame:self.vc.view.bounds];
-    self.playButton.frame = CGRectMake(self.vc.view.frame.size.width/2-36, self.vc.view.frame.size.height/2-36, 72, 72);
-    [self.playButton setImage:MHGalleryImage(@"playButton") forState:UIControlStateNormal];
-    [self.playButton setTag:508];
-    [self.playButton setHidden:YES];
-    [self.playButton addTarget:self action:@selector(playButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.playButton];
-    
-}
--(void)stopMovieDownloadTimer{
-    [self.movieDownloadedTimer invalidate];
-    self.movieDownloadedTimer = nil;
-}
-
--(void)removeAllMoviePlayerViewsAndNotifications{
-    
-    self.videoDownloaded = NO;
-    self.currentTimeMovie =0;
-    [self stopTimer];
-    [self stopMovieDownloadTimer];
-    
-    
-    self.playingVideo =NO;
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:MPMoviePlayerLoadStateDidChangeNotification
-                                                  object:self.moviePlayer];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:MPMoviePlayerPlaybackDidFinishNotification
-                                                  object:self.moviePlayer];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:MPMoviePlayerPlaybackStateDidChangeNotification
-                                                  object:self.moviePlayer];
-    
-    
-    [self.moviePlayer stop];
-    [self.moviePlayer.view removeFromSuperview];
-    self.moviePlayer = nil;
-    
-    [self addPlayButtonToView];
-    [self.playButton setHidden:NO];
-    self.playButton.frame = CGRectMake(self.vc.view.frame.size.width/2-36, self.vc.view.frame.size.height/2-36, 72, 72);
-    [self.moviewPlayerButtonBehinde removeFromSuperview];
-    [self.vc changeToPlayButton];
-    [self updateTimerLabels];
-    [self.slider setValue:0 animated:NO];
-}
-
-
--(void)moviePlayBackDidFinish:(NSNotification *)notification{
-    self.playingVideo = NO;
-    [self.vc changeToPlayButton];
-    [self.playButton setHidden:NO];
-    [self.view bringSubviewToFront:self.playButton];
-    [self stopTimer];
-    
-    self.moviePlayer.currentPlaybackTime =0;
-    [self movieTimerChanged:nil];
-    [self updateTimerLabels];
-    
-}
--(void)stopTimer{
-    [self.movieTimer invalidate];
-    self.movieTimer = nil;
-}
-
--(void)addMoviePlayerToViewWithURL:(NSURL*)url{
-    
-    self.videoWasPlayable = NO;
-    
-    self.moviePlayer = [MPMoviePlayerController new];
-    if (self.vc.isHiddingToolBarAndNavigationBar) {
-        self.moviePlayer.backgroundView.backgroundColor = [UIColor blackColor];
-    }else{
-        self.moviePlayer.backgroundView.backgroundColor = [UIColor whiteColor];
-    }
-    self.moviePlayer.movieSourceType = MPMovieSourceTypeStreaming;
-    self.moviePlayer.controlStyle = MPMovieControlStyleNone;
-    self.moviePlayer.contentURL =url;
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(loadStateDidChange:)
-                                                 name:MPMoviePlayerLoadStateDidChangeNotification
-                                               object:self.moviePlayer];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(moviePlayBackDidFinish:)
-                                                 name:MPMoviePlayerPlaybackDidFinishNotification
-                                               object:self.moviePlayer];
-    
-    if (self.vc.isHiddingToolBarAndNavigationBar) {
-        self.moviePlayer.view.backgroundColor = [UIColor blackColor];
-    }else{
-        self.moviePlayer.view.backgroundColor = [UIColor whiteColor];
-    }
-    [self.moviePlayer setShouldAutoplay:NO];
-    self.moviePlayer.view.frame =self.view.bounds;
-    [self.moviePlayer.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
-    self.moviePlayer.view.hidden = YES;
-    
-    [self.view addSubview: self.moviePlayer.view];
-    
-    self.playingVideo =NO;
-    
-    self.movieDownloadedTimer = [NSTimer timerWithTimeInterval:0.06f target:self selector:@selector(changeProgressBehinde:) userInfo:nil repeats:YES];
-    [[NSRunLoop currentRunLoop] addTimer:self.movieDownloadedTimer forMode:NSRunLoopCommonModes];
-    
-    [self changeToPlayable];
-}
-
-
--(void)playButtonPressed{
-    if (!self.playingVideo) {
-        [self.view bringSubviewToFront:self.moviePlayer.view];
-        [self.view bringSubviewToFront:self.moviewPlayerButtonBehinde];
-        [self.view bringSubviewToFront:self.moviePlayerToolBarTop];
-        
-        [self.playButton setHidden:YES];
-        self.playingVideo =YES;
-        
-        if (self.moviePlayer) {
-            [self.moviePlayer play];
-            [self.vc changeToPauseButton];
-            
-        }else{
-            UIActivityIndicatorView *act = [[UIActivityIndicatorView alloc]initWithFrame:self.view.bounds];
-            act.tag = 304;
-            [self.view addSubview:act];
-            [act startAnimating];
-            self.shouldPlayVideo = YES;
-        }
-        if (!self.movieTimer) {
-            self.movieTimer = [NSTimer timerWithTimeInterval:0.01f target:self selector:@selector(movieTimerChanged:) userInfo:nil repeats:YES];
-            [[NSRunLoop currentRunLoop] addTimer:self.movieTimer forMode:NSRunLoopCommonModes];
-        }
-        
-    }else{
-        [self stopMovie];
-    }
-}
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
     if (self.vc.isHiddingToolBarAndNavigationBar) {
-        if (self.moviePlayer) {
-            self.moviePlayer.backgroundView.backgroundColor = [UIColor blackColor];
-        }
-        
         self.scrollView.backgroundColor = [UIColor blackColor];
         self.act.color = [UIColor whiteColor];
-        [self.moviePlayerToolBarTop setAlpha:0];
     }else{
-        
-        if (self.moviePlayer) {
-            self.moviePlayer.backgroundView.backgroundColor = [UIColor whiteColor];
-        }
-        if (self.moviePlayerToolBarTop) {
-            if (self.item.galleryType == MHGalleryTypeVideo) {
-                if (self.videoWasPlayable && self.wholeTimeMovie >0) {
-                    [self.moviePlayerToolBarTop setAlpha:1];
-                }
-            }
-        }
-        
         self.scrollView.backgroundColor = [UIColor whiteColor];
         self.act.color = [UIColor blackColor];
-    }
-    if (self.item.galleryType == MHGalleryTypeVideo) {
-        
-        if (self.moviePlayer) {
-            [self.slider setValue:self.moviePlayer.currentPlaybackTime animated:NO];
-        }
-        
-        if (self.imageView.image) {
-            self.playButton.frame = CGRectMake(self.vc.view.frame.size.width/2-36, self.vc.view.frame.size.height/2-36, 72, 72);
-        }
-        self.leftSliderLabel.frame = CGRectMake(8, 0, 40, 43);
-        self.rightSliderLabel.frame =CGRectMake(self.vc.view.bounds.size.width-50, 0, 50, 43);
-        
-        if([UIApplication sharedApplication].statusBarOrientation != UIInterfaceOrientationPortrait){
-            if (self.view.bounds.size.width < self.view.bounds.size.height) {
-                self.rightSliderLabel.frame =CGRectMake(self.view.bounds.size.height-50, 0, 50, 43);
-                if (self.imageView.image) {
-                    self.playButton.frame = CGRectMake(self.view.bounds.size.height/2-36, self.view.bounds.size.width/2-36, 72, 72);
-                }
-            }
-        }
-        
-        self.moviePlayerToolBarTop.frame =CGRectMake(0,64, self.view.frame.size.width, 44);
-        if (!MHISIPAD) {
-            if ([UIApplication sharedApplication].statusBarOrientation != UIInterfaceOrientationPortrait) {
-                self.moviePlayerToolBarTop.frame =CGRectMake(0,52, self.view.frame.size.width, 44);
-            }
-        }
     }
 }
 
@@ -1237,13 +707,6 @@
 -(void)handelImageTap:(UIGestureRecognizer *)gestureRecognizer{
     if (!self.vc.isHiddingToolBarAndNavigationBar) {
         [UIView animateWithDuration:0.3 animations:^{
-            
-            if (self.moviePlayer) {
-                self.moviePlayer.backgroundView.backgroundColor = [UIColor blackColor];
-            }
-            if (self.moviePlayerToolBarTop) {
-                self.moviePlayerToolBarTop.alpha =0;
-            }
             self.navigationController.navigationBar.alpha =0;
             self.vc.tb.alpha =0 ;
             self.scrollView.backgroundColor = [UIColor blackColor];
@@ -1269,14 +732,6 @@
             self.vc.tb.alpha = 1;
             self.scrollView.backgroundColor = [UIColor whiteColor];
             self.vc.pvc.view.backgroundColor = [UIColor whiteColor];
-            if (self.moviePlayer) {
-                self.moviePlayer.backgroundView.backgroundColor = [UIColor whiteColor];
-            }
-            if (self.moviePlayerToolBarTop) {
-                if (self.item.galleryType == MHGalleryTypeVideo) {
-                    self.moviePlayerToolBarTop.alpha =1;
-                }
-            }
             [self statusBarObject].alpha =1;
             self.vc.descriptionView.alpha =1;
             self.vc.descriptionViewBackground.alpha =1;
@@ -1289,9 +744,6 @@
 
 - (void)handleDoubleTap:(UIGestureRecognizer *)gestureRecognizer {
     if ([self.imageView.image isEqual:MHGalleryImage(@"error")]) {
-        return;
-    }
-    if (self.item.galleryType == MHGalleryTypeVideo) {
         return;
     }
     if (self.scrollView.zoomScale >1) {
@@ -1351,13 +803,6 @@
 
 -(void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
                                         duration:(NSTimeInterval)duration{
-    if (self.moviePlayerToolBarTop) {
-        self.moviePlayerToolBarTop.frame = CGRectMake(0, self.navigationController.navigationBar.bounds.size.height+20, self.view.frame.size.width,44);
-        self.leftSliderLabel.frame       = CGRectMake(8, 0, 40, 43);
-        self.rightSliderLabel.frame      = CGRectMake(self.view.frame.size.width-20, 0, 50, 43);
-    }
-    self.playButton.frame = CGRectMake(self.vc.view.frame.size.width/2-36, self.vc.view.frame.size.height/2-36, 72, 72);
-    
     self.scrollView.contentSize = CGSizeMake(self.view.bounds.size.width*self.scrollView.zoomScale, self.view.bounds.size.height*self.scrollView.zoomScale);
     
     self.imageView.frame =CGRectMake(0,0 , self.scrollView.contentSize.width,self.scrollView.contentSize.height);

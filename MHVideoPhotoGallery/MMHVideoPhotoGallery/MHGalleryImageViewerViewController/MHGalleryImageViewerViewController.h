@@ -31,9 +31,6 @@
 @property (nonatomic, copy) void (^finishedCallback)(UINavigationController *galleryNavMH, NSUInteger photoIndex,MHTransitionDismissMHGallery *interactiveTransition,UIImage *image);
 
 -(void)updateToolBarForItem:(MHGalleryItem*)item;
--(void)playStopButtonPressed;
--(void)changeToPauseButton;
--(void)changeToPlayButton;
 
 @end
 
@@ -43,23 +40,11 @@
 @property (nonatomic,strong)        MHGalleryImageViewerViewController *vc;
 @property (nonatomic,strong)        MHGalleryItem *item;
 @property (nonatomic,strong)        UIScrollView *scrollView;
-@property (nonatomic,strong)        UIButton *playButton;
 @property (nonatomic,strong)        UIActivityIndicatorView *act;
 @property (nonatomic,strong)        UIImageView *imageView;
-@property (nonatomic,strong)        MPMoviePlayerController *moviePlayer;
 
 @property (nonatomic)               NSInteger pageIndex;
-@property (nonatomic)               NSInteger currentTimeMovie;
 
-@property (nonatomic,getter = isPlayingVideo)        BOOL playingVideo;
-@property (nonatomic,getter = isPausingVideo)        BOOL pausingVideo;
-@property (nonatomic)                                BOOL videoWasPlayable;
-@property (nonatomic)                                BOOL videoDownloaded;
-
-
--(void)stopMovie;
--(void)removeAllMoviePlayerViewsAndNotifications;
--(void)playButtonPressed;
 -(void)centerImageView;
 
 @property (nonatomic, copy) void (^finishedCallback)(NSUInteger currentIndex,UIImage *image,MHTransitionDismissMHGallery *interactiveTransition);

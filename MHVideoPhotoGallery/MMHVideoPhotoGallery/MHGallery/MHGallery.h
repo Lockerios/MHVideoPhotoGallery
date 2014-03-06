@@ -106,7 +106,6 @@ typedef NS_ENUM(NSUInteger, MHYoutubeThumbQuality) {
 @property (nonatomic,strong) NSString           *urlString;
 @property (nonatomic,strong) NSString           *description;
 @property (nonatomic,strong) NSAttributedString *attributedString;
-@property (nonatomic)        MHGalleryType       galleryType;
 
 /**
  *  MHGalleryItem
@@ -116,8 +115,7 @@ typedef NS_ENUM(NSUInteger, MHYoutubeThumbQuality) {
  *
  */
 
-- (id)initWithURL:(NSString*)urlString
-      galleryType:(MHGalleryType)galleryType;
+- (id)initWithURL:(NSString*)urlString;
 
 @end
 
@@ -143,30 +141,6 @@ typedef NS_ENUM(NSUInteger, MHYoutubeThumbQuality) {
 @property (nonatomic,strong) NSArray *galleryItems;
 @property (nonatomic,assign) UIStatusBarStyle oldStatusBarStyle;
 @property (nonatomic,assign) BOOL animateWithCustomTransition;
-/**
- *  default is MHYoutubeThumbQualityHQ
- */
-@property (nonatomic,assign) MHYoutubeThumbQuality youtubeThumbQuality;
-/**
- *  Default is MHVimeoThumbQualityLarge
- */
-@property (nonatomic,assign) MHVimeoThumbQuality vimeoThumbQuality;
-/**
- *  default is MHWebThumbQualityHD720
- */
-@property (nonatomic,assign) MHWebThumbQuality webThumbQuality;
-/**
- *  default is MHWebPointForThumbStart
- */
-@property (nonatomic,assign) MHWebPointForThumb webPointForThumb;
-/**
- *  default is MHVimeoVideoQualityHD
- */
-@property (nonatomic,assign) MHVimeoVideoQuality vimeoVideoQuality;
-/**
- *  default is MHYoutubeVideoQualityHD720
- */
-@property (nonatomic,assign) MHYoutubeVideoQuality youtubeVideoQuality;
 
 + (MHGalleryDataManager *)sharedDataManager;
 /**
@@ -198,36 +172,10 @@ typedef NS_ENUM(NSUInteger, MHYoutubeThumbQuality) {
         withImageViewTransiation:(BOOL)animated __attribute__((deprecated));
 
 -(BOOL)isUIVCBasedStatusBarAppearance;
-/**
- *  To get the absolute URL for Vimeo Videos. To change the Quality check vimeoVideoQuality
- *
- *  @param URL          The URL as a String
- *  @param succeedBlock you will get the absolute URL
- */
--(void)getVimeoURLforMediaPlayer:(NSString*)URL
-                    successBlock:(void (^)(NSURL *URL,NSError *error))succeedBlock;
-/**
- *  To get the absolute URL for Youtube Videos. To change the Quality check youtubeVideoQuality
- *
- *  @param URL          The URL as a String
- *  @param succeedBlock you will get the absolute URL
- */
--(void)getYoutubeURLforMediaPlayer:(NSString*)URL
-                      successBlock:(void (^)(NSURL *URL,NSError *error))succeedBlock;
 
 -(void)getImageFromAssetLibrary:(NSString*)urlString
                       assetType:(MHAssetImageType)type
                    successBlock:(void (^)(UIImage *image,NSError *error))succeedBlock;
-/**
- *  Returns all MHGalleryObjects for a Youtube channel
- *
- *  @param channelName  set the name of the channel
- *  @param withTitle    if you want the title of the video set it to YES
- *  @param succeedBlock returns the Gallery items
- */
--(void)getMHGalleryObjectsForYoutubeChannel:(NSString*)channelName
-                                  withTitle:(BOOL)withTitle
-                               successBlock:(void (^)(NSArray *MHGalleryObjects,NSError *error))succeedBlock;
 
 @end
 
