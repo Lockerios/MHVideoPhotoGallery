@@ -7,7 +7,8 @@
 //
 
 #import "ExampleViewControllerCollectionViewInTableView.h"
-#import "MHOverViewController.h"
+#import "MHGalleryImageViewerViewController.h"
+#import "MHGalleryCells.h"
 
 @implementation UITabBarController (autoRotate)
 - (BOOL)shouldAutorotate {
@@ -221,6 +222,7 @@
 
 -(void)makeOverViewDetailCell:(MHGalleryOverViewCell*)cell atIndexPath:(NSIndexPath*)indexPath{
     MHGalleryItem *item = self.galleryDataSource[indexPath.section][indexPath.row];
+    
     [cell.thumbnail setContentMode:UIViewContentModeScaleAspectFill];
     
     cell.thumbnail.layer.shadowOffset = CGSizeMake(0, 0);

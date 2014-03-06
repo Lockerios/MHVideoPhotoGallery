@@ -7,8 +7,8 @@
 //
 
 #import "MHTransitionPresentMHGallery.h"
-#import "MHOverViewController.h"
 #import "MHGallery.h"
+#import "MHGalleryImageViewerViewController.h"
 
 @interface MHTransitionPresentMHGallery()
 @property (nonatomic, strong) UINavigationController *interactiveToViewController;

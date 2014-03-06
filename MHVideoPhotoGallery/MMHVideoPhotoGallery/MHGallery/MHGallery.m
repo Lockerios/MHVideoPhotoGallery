@@ -1,6 +1,6 @@
 
 #import "MHGallery.h"
-#import "MHOverViewController.h"
+#import "MHGalleryImageViewerViewController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "SDWebImageDecoder.h"
 #import <objc/runtime.h>
@@ -160,12 +160,6 @@ UIImage *MHGalleryImage(NSString *imageName){
     
     self.galleryItems =galleryItems;
     
-    MHOverViewController *gallery = [MHOverViewController new];
-    [gallery viewDidLoad];
-    gallery.finishedCallback = ^(UINavigationController *galleryNavMH,NSUInteger photoIndex,MHTransitionDismissMHGallery *interactiveTransition,UIImage *image) {
-        FinishBlock(galleryNavMH,photoIndex,interactiveTransition,image);
-    };
-    
     MHGalleryImageViewerViewController *detail = [MHGalleryImageViewerViewController new];
     detail.pageIndex = index;
     detail.finishedCallback = ^(UINavigationController *galleryNavMH,NSUInteger photoIndex,MHTransitionDismissMHGallery *interactiveTransition,UIImage *image) {
@@ -176,7 +170,7 @@ UIImage *MHGalleryImage(NSString *imageName){
     if (![self.viewModes containsObject:MHGalleryViewModeOverView] || galleryItems.count ==1) {
         nav.viewControllers = @[detail];
     }else{
-        nav.viewControllers = @[gallery,detail];
+
     }
     if (animated) {
 #warning Debug
@@ -626,34 +620,6 @@ UIImage *MHGalleryImage(NSString *imageName){
 
 @implementation UIViewController(MHGalleryViewController)
 
--(void)presentMHGalleryOverViewWithItems:(NSArray*)galleryItems
-                  finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex,UIImage *image,MHTransitionDismissMHGallery *interactiveDismissMHGallery)
-                                  )FinishBlock
-                                customAnimationFromImage:(BOOL)animated{
-   
-    [[MHGallerySharedManager sharedManager] qualityForVideos];
-    [[MHGallerySharedManager sharedManager] defaultViewModes];
-
-    [MHGallerySharedManager sharedManager].animateWithCustomTransition =animated;
-    [MHGallerySharedManager sharedManager].oldStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
-    [MHGallerySharedManager sharedManager].galleryItems =galleryItems;
-   
-    MHOverViewController *gallery = [MHOverViewController new];
-    [gallery viewDidLoad];
-    gallery.finishedCallback = ^(UINavigationController *galleryNavMH,NSUInteger photoIndex,MHTransitionDismissMHGallery *interactiveTransition,UIImage *image) {
-        FinishBlock(galleryNavMH,photoIndex,image,interactiveTransition);
-    };
-    UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:gallery];
-    if (animated) {
-#warning Debug
-        if (MHiOS7) {
-            nav.transitioningDelegate = self;
-        }
-        nav.modalPresentationStyle = UIModalPresentationFullScreen;
-    }
-    [self presentViewController:nav animated:YES completion:nil];
-}
-
 #warning Add Hide parament. Debug Lockerios.
 
 -(void)presentMHGalleryWithItems:(NSArray*)galleryItems
@@ -673,15 +639,6 @@ UIImage *MHGalleryImage(NSString *imageName){
     
     [MHGallerySharedManager sharedManager].galleryItems =galleryItems;
     
-    MHOverViewController *gallery = [MHOverViewController new];
-    [gallery viewDidLoad];
-    gallery.finishedCallback = ^(UINavigationController *galleryNavMH,
-                                 NSUInteger photoIndex,
-                                 MHTransitionDismissMHGallery *interactiveTransition,
-                                 UIImage *image) {
-        FinishBlock(galleryNavMH,photoIndex,image,interactiveTransition);
-    };
-    
     MHGalleryImageViewerViewController *detail = [MHGalleryImageViewerViewController new];
     detail.interactivePresentationTranstion = presentInteractive;
     detail.pageIndex = index;
@@ -695,15 +652,7 @@ UIImage *MHGalleryImage(NSString *imageName){
     
     UINavigationController *nav = [UINavigationController new];
     
-    if (isHide) {
-        nav.viewControllers = @[detail];
-    } else {
-        if (![[MHGallerySharedManager sharedManager].viewModes containsObject:MHGalleryViewModeOverView] || galleryItems.count ==1) {
-            nav.viewControllers = @[detail];
-        }else{
-            nav.viewControllers = @[gallery,detail];
-        }
-    }
+    nav.viewControllers = @[detail];
     
     if (animated) {
 #warning Debug

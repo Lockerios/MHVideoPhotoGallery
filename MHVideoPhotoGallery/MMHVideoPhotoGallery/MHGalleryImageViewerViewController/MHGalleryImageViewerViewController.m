@@ -8,8 +8,6 @@
 
 
 #import "MHGalleryImageViewerViewController.h"
-#import "MHOverViewController.h"
-#import "MHTransitionShowOverView.h"
 
 @implementation MHPinchGestureRecognizer
 @end
@@ -58,15 +56,12 @@
 }
 
 -(void)donePressed{
-    MHOverViewController *overView  =self.navigationController.viewControllers.firstObject;
     ImageViewController *imageViewer = self.pvc.viewControllers.firstObject;
     if (imageViewer.moviePlayer) {
         [imageViewer removeAllMoviePlayerViewsAndNotifications];
     }
     MHTransitionDismissMHGallery *dismissTransiton = [MHTransitionDismissMHGallery new];
     dismissTransiton.orientationTransformBeforeDismiss = [(NSNumber *)[self.navigationController.view valueForKeyPath:@"layer.transform.rotation.z"] floatValue];
-    
-    overView.finishedCallback(self.navigationController,self.pageIndex,dismissTransiton,imageViewer.imageView.image);
 }
 - (UIBarPosition)positionForBar:(id<UIBarPositioning>)bar{
     return UIBarPositionTopAttached;
@@ -306,12 +301,12 @@
 
 - (id<UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController
                          interactionControllerForAnimationController:(id<UIViewControllerAnimatedTransitioning>)animationController {
-    if ([animationController isKindOfClass:[MHTransitionShowOverView class]]) {
-        ImageViewController *imageViewController = [self.pvc.viewControllers firstObject];
-        return imageViewController.interactiveOverView;
-    }else {
+//    if ([animationController isKindOfClass:[MHTransitionShowOverView class]]) {
+//        ImageViewController *imageViewController = [self.pvc.viewControllers firstObject];
+//        return imageViewController.interactiveOverView;
+//    }else {
         return nil;
-    }
+//    }
 }
 
 - (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
@@ -322,10 +317,6 @@
     ImageViewController *theCurrentViewController = [self.pvc.viewControllers firstObject];
     if (theCurrentViewController.moviePlayer) {
         [theCurrentViewController removeAllMoviePlayerViewsAndNotifications];
-    }
-    
-    if ([toVC isKindOfClass:[MHOverViewController class]]) {
-        return [MHTransitionShowOverView new];
     }
     return nil;
 }
@@ -471,7 +462,7 @@
             self.imageView.frame = self.scrollView.frame;
             
             self.lastPointPop = [recognizer locationInView:self.view];
-            self.interactiveOverView = [MHTransitionShowOverView new];
+//            self.interactiveOverView = [MHTransitionShowOverView new];
             [self.navigationController popViewControllerAnimated:YES];
         }else{
             recognizer.cancelsTouchesInView = YES;
@@ -485,17 +476,17 @@
         }
         
         CGPoint point = [recognizer locationInView:self.view];
-        self.interactiveOverView.scale = recognizer.scale;
-        self.interactiveOverView.changedPoint = CGPointMake(self.lastPointPop.x - point.x, self.lastPointPop.y - point.y) ;
-        [self.interactiveOverView updateInteractiveTransition:1-recognizer.scale];
+//        self.interactiveOverView.scale = recognizer.scale;
+//        self.interactiveOverView.changedPoint = CGPointMake(self.lastPointPop.x - point.x, self.lastPointPop.y - point.y) ;
+//        [self.interactiveOverView updateInteractiveTransition:1-recognizer.scale];
         self.lastPointPop = point;
     }else if (recognizer.state == UIGestureRecognizerStateEnded || recognizer.state == UIGestureRecognizerStateCancelled) {
         if (recognizer.scale < 0.65) {
-            [self.interactiveOverView finishInteractiveTransition];
+//            [self.interactiveOverView finishInteractiveTransition];
         }else{
-            [self.interactiveOverView cancelInteractiveTransition];
+//            [self.interactiveOverView cancelInteractiveTransition];
         }
-        self.interactiveOverView = nil;
+//        self.interactiveOverView = nil;
     }
     
 }
@@ -546,8 +537,7 @@
                 self.interactiveTransition.interactive = YES;
                 
                 if (self.navigationController.viewControllers.count ==2) {
-                    MHOverViewController *overView  =[self.navigationController.viewControllers firstObject];
-                    overView.finishedCallback(self.navigationController,self.pageIndex,self.interactiveTransition,self.imageView.image);
+                    
                 }else{
                     self.vc.finishedCallback(self.navigationController,self.pageIndex,self.interactiveTransition,self.imageView.image);
                 }
@@ -809,12 +799,12 @@
     [(UIActivityIndicatorView*)[self.scrollView viewWithTag:507] stopAnimating];
 }
 -(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    if (self.interactiveOverView) {
-        if ([gestureRecognizer isKindOfClass:[MHPinchGestureRecognizer class]]) {
-            return YES;
-        }
-        return NO;
-    }
+//    if (self.interactiveOverView) {
+//        if ([gestureRecognizer isKindOfClass:[MHPinchGestureRecognizer class]]) {
+//            return YES;
+//        }
+//        return NO;
+//    }
     if (self.interactiveTransition) {
         if ([gestureRecognizer isEqual:self.pan]) {
             return YES;
@@ -832,13 +822,13 @@
 }
 -(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
     
-    if (self.interactiveOverView) {
-        if ([gestureRecognizer isKindOfClass:[MHPinchGestureRecognizer class]]) {
-            return YES;
-        }else{
-            return NO;
-        }
-    }else{
+//    if (self.interactiveOverView) {
+//        if ([gestureRecognizer isKindOfClass:[MHPinchGestureRecognizer class]]) {
+//            return YES;
+//        }else{
+//            return NO;
+//        }
+//    }else{
         if ([gestureRecognizer isKindOfClass:[MHPinchGestureRecognizer class]]) {
             if ([gestureRecognizer isKindOfClass:[MHPinchGestureRecognizer class]] && self.scrollView.zoomScale ==1) {
                 return YES;
@@ -847,7 +837,7 @@
             }
         }
         
-    }
+//    }
     if (self.vc.isUserScrolling) {
         if ([gestureRecognizer isEqual:self.pan]) {
             return NO;
@@ -874,11 +864,6 @@
 
 
 -(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    
-    
-    if (self.interactiveOverView) {
-        return NO;
-    }
     if (self.interactiveTransition) {
         return NO;
     }

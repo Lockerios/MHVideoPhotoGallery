@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MHTransitionShowOverView.h"
+#import "MHGalleryImageViewerViewController.h"
 #import "MHGallery.h"
 
 @interface MHPinchGestureRecognizer : UIPinchGestureRecognizer
@@ -40,7 +40,6 @@
 @interface ImageViewController : UIViewController<UIScrollViewDelegate,UIGestureRecognizerDelegate>
 
 @property (nonatomic,strong)        MHTransitionDismissMHGallery *interactiveTransition;
-@property (nonatomic,strong)        MHTransitionShowOverView *interactiveOverView;
 @property (nonatomic,strong)        MHGalleryImageViewerViewController *vc;
 @property (nonatomic,strong)        MHGalleryItem *item;
 @property (nonatomic,strong)        UIScrollView *scrollView;

@@ -79,12 +79,9 @@
 		F5B2EC8217F9D70C000ADC51 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F5B2EC8117F9D70C000ADC51 /* Storyboard.storyboard */; };
 		F5C52E8C18C0828E001E431E /* MHTransitionDismissMHGallery.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C52E8318C0828D001E431E /* MHTransitionDismissMHGallery.m */; };
 		F5C52E8D18C0828E001E431E /* MHTransitionPresentMHGallery.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C52E8518C0828D001E431E /* MHTransitionPresentMHGallery.m */; };
-		F5C52E8E18C0828E001E431E /* MHTransitionShowDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C52E8718C0828D001E431E /* MHTransitionShowDetail.m */; };
-		F5C52E8F18C0828E001E431E /* MHTransitionShowOverView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C52E8918C0828D001E431E /* MHTransitionShowOverView.m */; };
 		F5C52E9318C086E4001E431E /* MHGallery.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C52E9218C086E4001E431E /* MHGallery.m */; };
 		F5D9AB5118B665A80014AAC6 /* MHGallery.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F5D9AB5018B665A80014AAC6 /* MHGallery.bundle */; };
 		F5DBBF25187D577C00BEFE29 /* MHGalleryCells.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DBBF24187D577C00BEFE29 /* MHGalleryCells.m */; };
-		F5DBBF28187D57DD00BEFE29 /* MHOverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DBBF27187D57DD00BEFE29 /* MHOverViewController.m */; };
 		F5DBBF2E187D582000BEFE29 /* MHUIImageViewContentViewAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DBBF2D187D582000BEFE29 /* MHUIImageViewContentViewAnimation.m */; };
 		F5DBBF31187D584C00BEFE29 /* MHGalleryImageViewerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DBBF30187D584C00BEFE29 /* MHGalleryImageViewerViewController.m */; };
 		F5EE8DA61890393D002E5734 /* testIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5EE8DA51890393D002E5734 /* testIcon@2x.png */; };
@@ -195,10 +192,6 @@
 		F5C52E8318C0828D001E431E /* MHTransitionDismissMHGallery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MHTransitionDismissMHGallery.m; path = MMHVideoPhotoGallery/Transitions/MHTransitionDismissMHGallery.m; sourceTree = "<group>"; };
 		F5C52E8418C0828D001E431E /* MHTransitionPresentMHGallery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MHTransitionPresentMHGallery.h; path = MMHVideoPhotoGallery/Transitions/MHTransitionPresentMHGallery.h; sourceTree = "<group>"; };
 		F5C52E8518C0828D001E431E /* MHTransitionPresentMHGallery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MHTransitionPresentMHGallery.m; path = MMHVideoPhotoGallery/Transitions/MHTransitionPresentMHGallery.m; sourceTree = "<group>"; };
-		F5C52E8618C0828D001E431E /* MHTransitionShowDetail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MHTransitionShowDetail.h; path = MMHVideoPhotoGallery/Transitions/MHTransitionShowDetail.h; sourceTree = "<group>"; };
-		F5C52E8718C0828D001E431E /* MHTransitionShowDetail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MHTransitionShowDetail.m; path = MMHVideoPhotoGallery/Transitions/MHTransitionShowDetail.m; sourceTree = "<group>"; };
-		F5C52E8818C0828D001E431E /* MHTransitionShowOverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MHTransitionShowOverView.h; path = MMHVideoPhotoGallery/Transitions/MHTransitionShowOverView.h; sourceTree = "<group>"; };
-		F5C52E8918C0828D001E431E /* MHTransitionShowOverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MHTransitionShowOverView.m; path = MMHVideoPhotoGallery/Transitions/MHTransitionShowOverView.m; sourceTree = "<group>"; };
 		F5C52E9118C086E4001E431E /* MHGallery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MHGallery.h; path = MMHVideoPhotoGallery/MHGallery/MHGallery.h; sourceTree = "<group>"; };
 		F5C52E9218C086E4001E431E /* MHGallery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MHGallery.m; path = MMHVideoPhotoGallery/MHGallery/MHGallery.m; sourceTree = "<group>"; };
 		F5D9AB4918B61E390014AAC6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -210,8 +203,6 @@
 		F5D9AB5018B665A80014AAC6 /* MHGallery.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = MHGallery.bundle; path = MMHVideoPhotoGallery/MHGallery.bundle; sourceTree = "<group>"; };
 		F5DBBF23187D577C00BEFE29 /* MHGalleryCells.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MHGalleryCells.h; path = MMHVideoPhotoGallery/MHGalleryCells/MHGalleryCells.h; sourceTree = "<group>"; };
 		F5DBBF24187D577C00BEFE29 /* MHGalleryCells.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MHGalleryCells.m; path = MMHVideoPhotoGallery/MHGalleryCells/MHGalleryCells.m; sourceTree = "<group>"; };
-		F5DBBF26187D57DD00BEFE29 /* MHOverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MHOverViewController.h; path = MMHVideoPhotoGallery/MHGalleryOverViewController/MHOverViewController.h; sourceTree = "<group>"; };
-		F5DBBF27187D57DD00BEFE29 /* MHOverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MHOverViewController.m; path = MMHVideoPhotoGallery/MHGalleryOverViewController/MHOverViewController.m; sourceTree = "<group>"; };
 		F5DBBF2C187D582000BEFE29 /* MHUIImageViewContentViewAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MHUIImageViewContentViewAnimation.h; path = MMHVideoPhotoGallery/MHUIImageViewContentViewAnimation/MHUIImageViewContentViewAnimation.h; sourceTree = "<group>"; };
 		F5DBBF2D187D582000BEFE29 /* MHUIImageViewContentViewAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MHUIImageViewContentViewAnimation.m; path = MMHVideoPhotoGallery/MHUIImageViewContentViewAnimation/MHUIImageViewContentViewAnimation.m; sourceTree = "<group>"; };
 		F5DBBF2F187D584C00BEFE29 /* MHGalleryImageViewerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MHGalleryImageViewerViewController.h; path = MMHVideoPhotoGallery/MHGalleryImageViewerViewController/MHGalleryImageViewerViewController.h; sourceTree = "<group>"; };
@@ -377,10 +368,6 @@
 				F5C52E8318C0828D001E431E /* MHTransitionDismissMHGallery.m */,
 				F5C52E8418C0828D001E431E /* MHTransitionPresentMHGallery.h */,
 				F5C52E8518C0828D001E431E /* MHTransitionPresentMHGallery.m */,
-				F5C52E8618C0828D001E431E /* MHTransitionShowDetail.h */,
-				F5C52E8718C0828D001E431E /* MHTransitionShowDetail.m */,
-				F5C52E8818C0828D001E431E /* MHTransitionShowOverView.h */,
-				F5C52E8918C0828D001E431E /* MHTransitionShowOverView.m */,
 			);
 			name = Transitions;
 			sourceTree = "<group>";
@@ -442,7 +429,6 @@
 				F5DBBF18187D56CD00BEFE29 /* MHGalleryImageViewerViewController */,
 				F5DBBF17187D56B700BEFE29 /* MHUIImageViewContentViewAnimation */,
 				F5F8DA2A18B6A65900EB25F2 /* MHGalleryPresenterImageView */,
-				F5DBBF15187D569A00BEFE29 /* MHGalleryOverViewController */,
 				F5DBBF19187D56DB00BEFE29 /* MHGallery */,
 				F5DBBF14187D568100BEFE29 /* MHGalleryCells */,
 				F5415D8A186DB65600BB8B52 /* Transitions */,
@@ -461,15 +447,6 @@
 				F5DBBF24187D577C00BEFE29 /* MHGalleryCells.m */,
 			);
 			name = MHGalleryCells;
-			sourceTree = "<group>";
-		};
-		F5DBBF15187D569A00BEFE29 /* MHGalleryOverViewController */ = {
-			isa = PBXGroup;
-			children = (
-				F5DBBF26187D57DD00BEFE29 /* MHOverViewController.h */,
-				F5DBBF27187D57DD00BEFE29 /* MHOverViewController.m */,
-			);
-			name = MHGalleryOverViewController;
 			sourceTree = "<group>";
 		};
 		F5DBBF17187D56B700BEFE29 /* MHUIImageViewContentViewAnimation */ = {
@@ -654,9 +631,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F5DBBF28187D57DD00BEFE29 /* MHOverViewController.m in Sources */,
 				F54337CE18A3FA9100CA1DAB /* UIImageView+MHGallery.m in Sources */,
-				F5C52E8F18C0828E001E431E /* MHTransitionShowOverView.m in Sources */,
 				F5245DB118AA16D3004C6FFA /* SDWebImageManager.m in Sources */,
 				F5245DAE18AA16D3004C6FFA /* SDWebImageDecoder.m in Sources */,
 				F5245DB218AA16D3004C6FFA /* SDWebImagePrefetcher.m in Sources */,
@@ -673,7 +648,6 @@
 				F5C52E8D18C0828E001E431E /* MHTransitionPresentMHGallery.m in Sources */,
 				F5245DAF18AA16D3004C6FFA /* SDWebImageDownloader.m in Sources */,
 				F5245DB518AA16D3004C6FFA /* UIImage+MultiFormat.m in Sources */,
-				F5C52E8E18C0828E001E431E /* MHTransitionShowDetail.m in Sources */,
 				F5245DB318AA16D3004C6FFA /* UIButton+WebCache.m in Sources */,
 				F5245DAB18AA16D3004C6FFA /* NSData+GIF.m in Sources */,
 				F5C52E8C18C0828E001E431E /* MHTransitionDismissMHGallery.m in Sources */,
