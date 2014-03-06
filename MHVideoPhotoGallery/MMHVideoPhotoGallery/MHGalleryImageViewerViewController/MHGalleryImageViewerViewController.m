@@ -9,7 +9,6 @@
 
 #import "MHGalleryImageViewerViewController.h"
 #import "MHOverViewController.h"
-#import "MHTransitionShowShareView.h"
 #import "MHTransitionShowOverView.h"
 
 @implementation MHPinchGestureRecognizer
@@ -18,7 +17,6 @@
 @interface MHGalleryImageViewerViewController()
 @property (nonatomic, strong) NSArray *galleryItems;
 @property (nonatomic, strong) UIActivityViewController *activityViewController;
-@property (nonatomic, strong) UIBarButtonItem *shareBarButton;
 @property (nonatomic, strong) UIBarButtonItem *leftBarButton;
 @property (nonatomic, strong) UIBarButtonItem *rightBarButton;
 @property (nonatomic, strong) UIBarButtonItem *playStopBarButton;
@@ -133,26 +131,14 @@
                                                 target:self
                                                 action:@selector(rightPressed:)];
     
-    self.shareBarButton = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemAction
-                                                              target:self
-                                                              action:@selector(sharePressed)];
-    
     UIBarButtonItem *flex = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
                                                                          target:self
                                                                          action:nil];
     
-    if (self.isShareHide) {
-        if (item.galleryType == MHGalleryTypeVideo) {
-            [self.tb setItems:@[flex,self.leftBarButton,flex,self.playStopBarButton,flex,self.rightBarButton,flex]];
-        }else{
-            [self.tb setItems:@[flex,self.leftBarButton,flex,self.rightBarButton,flex]];
-        }
-    } else {
-        if (item.galleryType == MHGalleryTypeVideo) {
-            [self.tb setItems:@[self.shareBarButton,flex,self.leftBarButton,flex,self.playStopBarButton,flex,self.rightBarButton,flex]];
-        }else{
-            [self.tb setItems:@[self.shareBarButton,flex,self.leftBarButton,flex,self.rightBarButton,flex]];
-        }
+    if (item.galleryType == MHGalleryTypeVideo) {
+        [self.tb setItems:@[flex,self.leftBarButton,flex,self.playStopBarButton,flex,self.rightBarButton,flex]];
+    }else{
+        [self.tb setItems:@[flex,self.leftBarButton,flex,self.rightBarButton,flex]];
     }
     
     if (self.pageIndex == 0) {
@@ -220,20 +206,6 @@
                 [imageViewController playButtonPressed];
             }
         }
-    }
-}
-
--(void)sharePressed{
-    
-    if ([[MHGallerySharedManager sharedManager].viewModes containsObject:MHGalleryViewModeShare]) {
-        MHShareViewController *share = [MHShareViewController new];
-        share.pageIndex = self.pageIndex;
-        [self.navigationController pushViewController:share
-                                             animated:YES];
-    }else{
-        UIActivityViewController *act = [[UIActivityViewController alloc]initWithActivityItems:@[[(ImageViewController*)[self.pvc.viewControllers firstObject] imageView].image] applicationActivities:nil];
-        [self presentViewController:act animated:YES completion:nil];
-        
     }
 }
 
@@ -322,20 +294,11 @@
 
 -(void)updateToolBarForItem:(MHGalleryItem*)item{
     UIBarButtonItem *flex = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
-    if (self.isShareHide) {
-        if (item.galleryType == MHGalleryTypeVideo) {
-            [self changeToPlayButton];
-            [self.tb setItems:@[flex,self.leftBarButton,flex,self.playStopBarButton,flex,self.rightBarButton,flex]];
-        }else{
-            [self.tb setItems:@[flex,self.leftBarButton,flex,self.rightBarButton,flex]];
-        }
-    } else {
-        if (item.galleryType == MHGalleryTypeVideo) {
-            [self changeToPlayButton];
-            [self.tb setItems:@[self.shareBarButton,flex,self.leftBarButton,flex,self.playStopBarButton,flex,self.rightBarButton,flex]];
-        }else{
-            [self.tb setItems:@[self.shareBarButton,flex,self.leftBarButton,flex,self.rightBarButton,flex]];
-        }
+    if (item.galleryType == MHGalleryTypeVideo) {
+        [self changeToPlayButton];
+        [self.tb setItems:@[flex,self.leftBarButton,flex,self.playStopBarButton,flex,self.rightBarButton,flex]];
+    }else{
+        [self.tb setItems:@[flex,self.leftBarButton,flex,self.rightBarButton,flex]];
     }
 }
 
@@ -361,11 +324,6 @@
         [theCurrentViewController removeAllMoviePlayerViewsAndNotifications];
     }
     
-    if ([toVC isKindOfClass:[MHShareViewController class]]) {
-        MHTransitionShowShareView *present = [MHTransitionShowShareView new];
-        present.present = YES;
-        return present;
-    }
     if ([toVC isKindOfClass:[MHOverViewController class]]) {
         return [MHTransitionShowOverView new];
     }

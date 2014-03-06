@@ -790,9 +790,6 @@ UIImage *MHGalleryImage(NSString *imageName){
     if ([nav.viewControllers.lastObject  isKindOfClass:[MHGalleryImageViewerViewController class]]) {
         MHGalleryImageViewerViewController *imageViewer = nav.viewControllers.lastObject;
         
-#warning ImageViewer pushed here from TableView. Add Hide share code.
-        imageViewer.isShareHide = YES;
-        
         if (imageViewer.interactivePresentationTranstion) {
             MHTransitionPresentMHGallery *detail = imageViewer.interactivePresentationTranstion;
             detail.presentingImageView = imageViewer.presentingFromImageView;

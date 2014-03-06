@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "MHTransitionShowOverView.h"
 #import "MHGallery.h"
-#import "MHShareViewController.h"
 
 @interface MHPinchGestureRecognizer : UIPinchGestureRecognizer
 @property (nonatomic)NSInteger tag;
@@ -25,9 +24,6 @@
 @property (nonatomic, strong)          UIImageView *presentingFromImageView;
 @property (nonatomic, strong)          UIImageView *dismissFromImageView;
 @property (nonatomic, strong)          MHTransitionPresentMHGallery *interactivePresentationTranstion;
-
-#warning Lockerios debug.
-@property (nonatomic)                  BOOL isShareHide;
 
 @property (nonatomic,getter = isUserScrolling)                   BOOL userScrolls;
 @property (nonatomic,getter = isHiddingToolBarAndNavigationBar)  BOOL hiddingToolBarAndNavigationBar;
