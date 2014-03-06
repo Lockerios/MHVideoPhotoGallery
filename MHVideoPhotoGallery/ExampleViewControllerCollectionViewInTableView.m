@@ -236,7 +236,7 @@
     if (item.galleryType == MHGalleryTypeImage) {
         [cell.thumbnail setImageWithURL:[NSURL URLWithString:item.urlString]];
     }else{
-        [[MHGallerySharedManager sharedManager] startDownloadingThumbImage:item.urlString
+        [[MHGalleryDataManager sharedDataManager] startDownloadingThumbImage:item.urlString
                                                               successBlock:^(UIImage *image, NSUInteger videoDuration, NSError *error,NSString *newURL) {
                                                                   cell.thumbnail.image = image;
                                                               }];

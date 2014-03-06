@@ -108,10 +108,10 @@ UIImage *MHGalleryImage(NSString *imageName){
 @end
 
 
-@implementation MHGallerySharedManager
+@implementation MHGalleryDataManager
 
-+ (MHGallerySharedManager *)sharedManager{
-    static MHGallerySharedManager *sharedManagerInstance = nil;
++ (MHGalleryDataManager *)sharedDataManager{
+    static MHGalleryDataManager *sharedManagerInstance = nil;
     static dispatch_once_t onceQueue;
     dispatch_once(&onceQueue, ^{
         sharedManagerInstance = [[self alloc] init];
@@ -631,13 +631,13 @@ UIImage *MHGalleryImage(NSString *imageName){
                                   )FinishBlock
         customAnimationFromImage:(BOOL)animated{
     
-    [[MHGallerySharedManager sharedManager] qualityForVideos];
-    [[MHGallerySharedManager sharedManager] defaultViewModes];
+    [[MHGalleryDataManager sharedDataManager] qualityForVideos];
+    [[MHGalleryDataManager sharedDataManager] defaultViewModes];
     
-    [MHGallerySharedManager sharedManager].animateWithCustomTransition =animated;
-    [MHGallerySharedManager sharedManager].oldStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
+    [MHGalleryDataManager sharedDataManager].animateWithCustomTransition =animated;
+    [MHGalleryDataManager sharedDataManager].oldStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
     
-    [MHGallerySharedManager sharedManager].galleryItems =galleryItems;
+    [MHGalleryDataManager sharedDataManager].galleryItems =galleryItems;
     
     MHGalleryImageViewerViewController *detail = [MHGalleryImageViewerViewController new];
     detail.interactivePresentationTranstion = presentInteractive;

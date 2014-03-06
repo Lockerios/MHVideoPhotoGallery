@@ -121,7 +121,7 @@ typedef NS_ENUM(NSUInteger, MHYoutubeThumbQuality) {
 
 @end
 
-@interface MHGallerySharedManager : NSObject
+@interface MHGalleryDataManager : NSObject
 
 /**
  *  By default the gallery will dismiss itself by scrolling to left at the pageIndex of 0 or scrolling right at the last pageindex here you can disbale it.
@@ -168,7 +168,7 @@ typedef NS_ENUM(NSUInteger, MHYoutubeThumbQuality) {
  */
 @property (nonatomic,assign) MHYoutubeVideoQuality youtubeVideoQuality;
 
-+ (MHGallerySharedManager *)sharedManager;
++ (MHGalleryDataManager *)sharedDataManager;
 /**
  *  You can create a Thumbnail from a Video, you can create it from Videos from a Webserver, Youtube and Vimeo
  *

@@ -111,7 +111,7 @@
             self.transitionImageView.hidden = NO;
             [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
             
-            [[UIApplication sharedApplication] setStatusBarStyle:[MHGallerySharedManager sharedManager].oldStatusBarStyle];
+            [[UIApplication sharedApplication] setStatusBarStyle:[MHGalleryDataManager sharedDataManager].oldStatusBarStyle];
         }];
         
     });
@@ -274,7 +274,7 @@
             [self.backView removeFromSuperview];
             [self.context completeTransition:!self.context.transitionWasCancelled];
             self.context = nil;
-            [[UIApplication sharedApplication] setStatusBarStyle:[MHGallerySharedManager sharedManager].oldStatusBarStyle];
+            [[UIApplication sharedApplication] setStatusBarStyle:[MHGalleryDataManager sharedDataManager].oldStatusBarStyle];
         }];
     });
     

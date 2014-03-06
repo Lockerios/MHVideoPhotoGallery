@@ -62,5 +62,7 @@
 -(void)playButtonPressed;
 -(void)centerImageView;
 
+@property (nonatomic, copy) void (^finishedCallback)(NSUInteger currentIndex,UIImage *image,MHTransitionDismissMHGallery *interactiveTransition);
+
 +(ImageViewController *)imageViewControllerForMHMediaItem:(MHGalleryItem*)item;
 @end

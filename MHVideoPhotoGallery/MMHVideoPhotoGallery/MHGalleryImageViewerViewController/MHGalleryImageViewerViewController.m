@@ -62,7 +62,9 @@
     }
     MHTransitionDismissMHGallery *dismissTransiton = [MHTransitionDismissMHGallery new];
     dismissTransiton.orientationTransformBeforeDismiss = [(NSNumber *)[self.navigationController.view valueForKeyPath:@"layer.transform.rotation.z"] floatValue];
+    self.finishedCallback(self.navigationController,self.pageIndex,dismissTransiton,imageViewer.imageView.image);
 }
+
 - (UIBarPosition)positionForBar:(id<UIBarPositioning>)bar{
     return UIBarPositionTopAttached;
 }
@@ -70,7 +72,7 @@
 -(void)viewDidLoad{
     [super viewDidLoad];
     
-    self.galleryItems = [MHGallerySharedManager sharedManager].galleryItems;
+    self.galleryItems = [MHGalleryDataManager sharedDataManager].galleryItems;
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                           target:self
@@ -153,10 +155,10 @@
     self.descriptionView.userInteractionEnabled = NO;
     
     
-    if([MHGallerySharedManager sharedManager].barColor){
-        self.tb.barTintColor = [MHGallerySharedManager sharedManager].barColor;
-        self.navigationController.navigationBar.barTintColor =[MHGallerySharedManager sharedManager].barColor;
-        self.descriptionViewBackground.barTintColor = [MHGallerySharedManager sharedManager].barColor;
+    if([MHGalleryDataManager sharedDataManager].barColor){
+        self.tb.barTintColor = [MHGalleryDataManager sharedDataManager].barColor;
+        self.navigationController.navigationBar.barTintColor =[MHGalleryDataManager sharedDataManager].barColor;
+        self.descriptionViewBackground.barTintColor = [MHGalleryDataManager sharedDataManager].barColor;
     }
     
     CGSize size = [self.descriptionView sizeThatFits:CGSizeMake(self.view.frame.size.width-20, MAXFLOAT)];
@@ -494,7 +496,7 @@
 -(void)userDidPan:(UIPanGestureRecognizer*)recognizer{
     BOOL userScrolls = self.vc.userScrolls;
     
-    if (![MHGallerySharedManager sharedManager].disableToDismissGalleryWithScrollGestureOnStartOrEndPoint) {
+    if (![MHGalleryDataManager sharedDataManager].disableToDismissGalleryWithScrollGestureOnStartOrEndPoint) {
         if (!self.interactiveTransition) {
             if (self.pageIndex ==0) {
                 if ([(UIPanGestureRecognizer*)recognizer translationInView:self.view].x >=0) {
@@ -506,7 +508,7 @@
                     recognizer.enabled =YES;
                 }
             }
-            if ((self.pageIndex == [MHGallerySharedManager sharedManager].galleryItems.count-1)) {
+            if ((self.pageIndex == [MHGalleryDataManager sharedDataManager].galleryItems.count-1)) {
                 if ([(UIPanGestureRecognizer*)recognizer translationInView:self.view].x <=0) {
                     userScrolls =NO;
                 }else{
@@ -544,7 +546,7 @@
             }else{
                 CGPoint currentPoint = [(UIPanGestureRecognizer*)recognizer translationInView:self.view];
                 
-                if ([MHGallerySharedManager sharedManager].shouldFixXValueForDismissMHGallery) {
+                if ([MHGalleryDataManager sharedDataManager].shouldFixXValueForDismissMHGallery) {
                     self.interactiveTransition.changedPoint = CGPointMake(self.startPoint.x, self.lastPoint.y-currentPoint.y);
                 }else{
                     self.interactiveTransition.changedPoint = CGPointMake(self.lastPoint.x-currentPoint.x, self.lastPoint.y-currentPoint.y);
@@ -552,7 +554,7 @@
                 progressY = [self checkProgressValue:progressY];
                 progressX = [self checkProgressValue:progressX];
                 
-                if (![MHGallerySharedManager sharedManager].shouldFixXValueForDismissMHGallery) {
+                if (![MHGalleryDataManager sharedDataManager].shouldFixXValueForDismissMHGallery) {
                     if (progressX> progressY) {
                         progressY = progressX;
                     }
@@ -568,7 +570,7 @@
                 if (velocityY <0) {
                     velocityY = -velocityY;
                 }
-                if (![MHGallerySharedManager sharedManager].shouldFixXValueForDismissMHGallery) {
+                if (![MHGalleryDataManager sharedDataManager].shouldFixXValueForDismissMHGallery) {
                     if (progressX> progressY) {
                         progressY = progressX;
                     }
@@ -633,7 +635,7 @@
         
         
         self.pan.delegate = self;
-        if([MHGallerySharedManager sharedManager].animateWithCustomTransition){
+        if([MHGalleryDataManager sharedDataManager].animateWithCustomTransition){
             [self.imageView addGestureRecognizer:self.pan];
             [self.pan setMaximumNumberOfTouches:1];
             [self.pan setDelaysTouchesBegan:YES];
@@ -704,7 +706,7 @@
         if ([self.item.urlString rangeOfString:@"assets-library"].location != NSNotFound) {
             
             [self.act stopAnimating];
-            [[MHGallerySharedManager sharedManager] getImageFromAssetLibrary:self.item.urlString
+            [[MHGalleryDataManager sharedDataManager] getImageFromAssetLibrary:self.item.urlString
                                                                    assetType:MHAssetImageTypeFull
                                                                 successBlock:^(UIImage *image, NSError *error) {
                                                                     self.imageView.image = image;
@@ -727,7 +729,7 @@
                                                          }];
             }else{
                 
-                [[MHGallerySharedManager sharedManager] startDownloadingThumbImage:self.item.urlString
+                [[MHGalleryDataManager sharedDataManager] startDownloadingThumbImage:self.item.urlString
                                                                       successBlock:^(UIImage *image,NSUInteger videoDuration,NSError *error,NSString *newURL) {
                                                                           if (!error) {
                                                                               [self handleGeneratedThumb:image
@@ -757,7 +759,7 @@
     [super viewDidAppear:animated];
     if (!self.moviePlayer && self.item.galleryType == MHGalleryTypeVideo) {
         if ([self.item.urlString rangeOfString:@"vimeo.com"].location != NSNotFound) {
-            [[MHGallerySharedManager sharedManager] getVimeoURLforMediaPlayer:self.item.urlString
+            [[MHGalleryDataManager sharedDataManager] getVimeoURLforMediaPlayer:self.item.urlString
                                                                  successBlock:^(NSURL *URL, NSError *error) {
                                                                      if (error) {
                                                                          [self changePlayButtonToUnPlay];
@@ -766,7 +768,7 @@
                                                                      }
                                                                  }];
         }else if ([self.item.urlString rangeOfString:@"youtube.com"].location != NSNotFound) {
-            [[MHGallerySharedManager sharedManager] getYoutubeURLforMediaPlayer:self.item.urlString
+            [[MHGalleryDataManager sharedDataManager] getYoutubeURLforMediaPlayer:self.item.urlString
                                                                    successBlock:^(NSURL *URL, NSError *error) {
                                                                        if (error) {
                                                                            [self changePlayButtonToUnPlay];
@@ -811,8 +813,8 @@
         }
         return NO;
     }
-    if (![MHGallerySharedManager sharedManager].disableToDismissGalleryWithScrollGestureOnStartOrEndPoint) {
-        if ((self.pageIndex ==0 || self.pageIndex == [MHGallerySharedManager sharedManager].galleryItems.count -1)) {
+    if (![MHGalleryDataManager sharedDataManager].disableToDismissGalleryWithScrollGestureOnStartOrEndPoint) {
+        if ((self.pageIndex ==0 || self.pageIndex == [MHGalleryDataManager sharedDataManager].galleryItems.count -1)) {
             if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]|| [otherGestureRecognizer isKindOfClass:NSClassFromString(@"UIScrollViewDelayedTouchesBeganGestureRecognizer")] ) {
                 return YES;
             }
@@ -852,8 +854,8 @@
         }
         return NO;
     }
-    if (![MHGallerySharedManager sharedManager].disableToDismissGalleryWithScrollGestureOnStartOrEndPoint) {
-        if ((self.pageIndex ==0 || self.pageIndex == [MHGallerySharedManager sharedManager].galleryItems.count -1) && [gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+    if (![MHGalleryDataManager sharedDataManager].disableToDismissGalleryWithScrollGestureOnStartOrEndPoint) {
+        if ((self.pageIndex ==0 || self.pageIndex == [MHGalleryDataManager sharedDataManager].galleryItems.count -1) && [gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
             
             return YES;
         }
@@ -874,8 +876,8 @@
         return YES;
     }
 
-    if (![MHGallerySharedManager sharedManager].disableToDismissGalleryWithScrollGestureOnStartOrEndPoint) {
-        if ((self.pageIndex ==0 || self.pageIndex == [MHGallerySharedManager sharedManager].galleryItems.count -1) && [gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+    if (![MHGalleryDataManager sharedDataManager].disableToDismissGalleryWithScrollGestureOnStartOrEndPoint) {
+        if ((self.pageIndex ==0 || self.pageIndex == [MHGalleryDataManager sharedDataManager].galleryItems.count -1) && [gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
             return YES;
         }
     }
@@ -927,7 +929,7 @@
     [self.view addSubview:self.moviewPlayerButtonBehinde];
     [self.view bringSubviewToFront:self.moviePlayerToolBarTop];
     [self.view bringSubviewToFront:self.playButton];
-    if([MHGallerySharedManager sharedManager].animateWithCustomTransition){
+    if([MHGalleryDataManager sharedDataManager].animateWithCustomTransition){
         [self.moviewPlayerButtonBehinde addGestureRecognizer:self.pan];
     }
     
