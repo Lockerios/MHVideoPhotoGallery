@@ -84,7 +84,7 @@
                                                             options:@{ UIPageViewControllerOptionInterPageSpacingKey : @30.f }];
     self.pvc.delegate = self;
     self.pvc.dataSource = self;
-#warning Debug
+
     if (MHiOS7) {
         self.pvc.automaticallyAdjustsScrollViewInsets =NO;
     }

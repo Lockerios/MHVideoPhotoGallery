@@ -248,29 +248,15 @@ typedef NS_ENUM(NSUInteger, MHYoutubeThumbQuality) {
                   finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex,UIImage *image,MHTransitionDismissMHGallery *interactiveDismissMHGallery)
                                   )FinishBlock
                         customAnimationFromImage:(BOOL)animated;
-/**
- *  With this methode you can Present the OverView
- *
- *  @param galleryItems tems you want to present
- *  @param FinishBlock  returns the UINavigationController the currentPageIndex and the Image
- *  @param animated     if you want the custom transition set it to Yes.
- */
--(void)presentMHGalleryOverViewWithItems:(NSArray*)galleryItems
-                          finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex,UIImage *image,MHTransitionDismissMHGallery *interactiveDismissMHGallery)
-                                          )FinishBlock
-                                customAnimationFromImage:(BOOL)animated;
 
 - (void)dismissViewControllerAnimated:(BOOL)flag
                      dismissImageView:(UIImageView*)dismissImageView
                            completion:(void (^)(void))completion;
 
-#warning Debug Lockerios. Add hide Over view.
-
 -(void)presentMHGalleryWithItems:(NSArray*)galleryItems
                         forIndex:(NSInteger)index
                    fromImageView:(UIImageView*)fromImageView
         withInteractiveTranstion:(MHTransitionPresentMHGallery*)presentInteractive
-                    hideOverVIew:(BOOL)isHide
                   finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex,UIImage *image,MHTransitionDismissMHGallery *interactiveDismissMHGallery)
                                   )FinishBlock
         customAnimationFromImage:(BOOL)animated;

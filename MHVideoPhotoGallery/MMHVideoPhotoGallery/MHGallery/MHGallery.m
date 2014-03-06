@@ -173,7 +173,6 @@ UIImage *MHGalleryImage(NSString *imageName){
 
     }
     if (animated) {
-#warning Debug
         if (MHiOS7) {
             nav.transitioningDelegate = viewcontroller;
         }
@@ -620,13 +619,10 @@ UIImage *MHGalleryImage(NSString *imageName){
 
 @implementation UIViewController(MHGalleryViewController)
 
-#warning Add Hide parament. Debug Lockerios.
-
 -(void)presentMHGalleryWithItems:(NSArray*)galleryItems
                         forIndex:(NSInteger)index
                    fromImageView:(UIImageView*)fromImageView
         withInteractiveTranstion:(MHTransitionPresentMHGallery*)presentInteractive
-                    hideOverVIew:(BOOL)isHide
                   finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex,UIImage *image,MHTransitionDismissMHGallery *interactiveDismissMHGallery)
                                   )FinishBlock
         customAnimationFromImage:(BOOL)animated{
@@ -655,7 +651,6 @@ UIImage *MHGalleryImage(NSString *imageName){
     nav.viewControllers = @[detail];
     
     if (animated) {
-#warning Debug
         if (MHiOS7) {
             nav.transitioningDelegate = self;
         }
@@ -672,12 +667,10 @@ UIImage *MHGalleryImage(NSString *imageName){
                                   )FinishBlock
         customAnimationFromImage:(BOOL)animated{
     
-#warning Debug Lockerios. Hide Over View.
     [self presentMHGalleryWithItems:galleryItems
                            forIndex:index
                       fromImageView:fromImageView
            withInteractiveTranstion:nil
-                       hideOverVIew:YES
                      finishCallback:FinishBlock
            customAnimationFromImage:animated];
 }
