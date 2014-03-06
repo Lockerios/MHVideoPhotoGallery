@@ -30,9 +30,10 @@
 
 @property (nonatomic, copy) void (^finishedCallback)(UINavigationController *galleryNavMH, NSUInteger photoIndex,MHTransitionDismissMHGallery *interactiveTransition,UIImage *image);
 
--(void)updateToolBarForItem:(MHGalleryItem*)item;
+- (void)updateToolBarForItem:(MHGalleryItem*)item;
 
 @end
+
 
 @interface ImageViewController : UIViewController<UIScrollViewDelegate,UIGestureRecognizerDelegate>
 
@@ -49,5 +50,6 @@
 
 @property (nonatomic, copy) void (^finishedCallback)(NSUInteger currentIndex,UIImage *image,MHTransitionDismissMHGallery *interactiveTransition);
 
-+(ImageViewController *)imageViewControllerForMHMediaItem:(MHGalleryItem*)item;
++ (ImageViewController *)imageViewControllerForMHMediaItem:(MHGalleryItem*)item;
+
 @end

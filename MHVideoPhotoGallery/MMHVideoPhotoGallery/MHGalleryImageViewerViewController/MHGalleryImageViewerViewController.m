@@ -9,50 +9,26 @@
 
 #import "MHGalleryImageViewerViewController.h"
 
+#pragma mark - MHPinchGestureRecognizer
+
 @implementation MHPinchGestureRecognizer
 @end
 
+#pragma mark - MHGalleryImageViewerViewController
+
 @interface MHGalleryImageViewerViewController()
+
 @property (nonatomic, strong) NSArray *galleryItems;
 @property (nonatomic, strong) UIActivityViewController *activityViewController;
 @property (nonatomic, strong) UIBarButtonItem *leftBarButton;
 @property (nonatomic, strong) UIBarButtonItem *rightBarButton;
+
 @end
+
 
 @implementation MHGalleryImageViewerViewController
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    self.navigationController.delegate = self;
-}
-
--(void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-    
-    if (![self.descriptionViewBackground isDescendantOfView:self.view]) {
-        [self.view addSubview:self.descriptionViewBackground];
-    }
-    if (![self.descriptionView isDescendantOfView:self.view]) {
-        [self.view addSubview:self.descriptionView];
-    }
-    if (![self.tb isDescendantOfView:self.view]) {
-        [self.view addSubview:self.tb];
-    }
-    [[self.pvc.view.subviews firstObject] setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ];
-}
-
-- (UIStatusBarStyle)preferredStatusBarStyle{
-    return  UIStatusBarStyleDefault;
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    if (self.navigationController.delegate == self) {
-        self.navigationController.delegate = nil;
-    }
-}
+#pragma mark - Methods
 
 -(void)donePressed{
     ImageViewController *imageViewer = self.pvc.viewControllers.firstObject;
@@ -62,9 +38,74 @@
     self.finishedCallback(self.navigationController,self.pageIndex,dismissTransiton,imageViewer.imageView.image);
 }
 
-- (UIBarPosition)positionForBar:(id<UIBarPositioning>)bar{
-    return UIBarPositionTopAttached;
+-(void)leftPressed:(id)sender{
+    self.rightBarButton.enabled = YES;
+    
+    ImageViewController *theCurrentViewController = [self.pvc.viewControllers firstObject];
+    NSUInteger indexPage = theCurrentViewController.pageIndex;
+    ImageViewController *imageViewController =[ImageViewController imageViewControllerForMHMediaItem:self.galleryItems[indexPage-1]];
+    imageViewController.pageIndex = indexPage-1;
+    imageViewController.vc = self;
+    
+    if (indexPage-1 == 0) {
+        self.leftBarButton.enabled = NO;
+    }
+    __block MHGalleryImageViewerViewController*blockSelf = self;
+    
+    [self.pvc setViewControllers:@[imageViewController] direction:UIPageViewControllerNavigationDirectionReverse animated:YES completion:^(BOOL finished) {
+        blockSelf.pageIndex = imageViewController.pageIndex;
+    }];
 }
+
+-(void)rightPressed:(id)sender{
+    [self.leftBarButton setEnabled:YES];
+    ImageViewController *theCurrentViewController = [self.pvc.viewControllers firstObject];
+    NSUInteger indexPage = theCurrentViewController.pageIndex;
+    ImageViewController *imageViewController =[ImageViewController imageViewControllerForMHMediaItem:self.galleryItems[indexPage+1]];
+    imageViewController.pageIndex = indexPage+1;
+    imageViewController.vc = self;
+    
+    if (indexPage+1 == self.galleryItems.count-1) {
+        self.rightBarButton.enabled = NO;
+    }
+    __block MHGalleryImageViewerViewController*blockSelf = self;
+    
+    [self.pvc setViewControllers:@[imageViewController] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:^(BOOL finished) {
+        blockSelf.pageIndex = imageViewController.pageIndex;
+    }];
+}
+
+-(void)updateDescriptionLabelForIndex:(NSInteger)index{
+    if (index < self.galleryItems.count) {
+        MHGalleryItem *item = self.galleryItems[index];
+        self.descriptionView.text = item.description;
+        
+        if (item.attributedString) {
+            self.descriptionView.attributedText = item.attributedString;
+        }
+        CGSize size = [self.descriptionView sizeThatFits:CGSizeMake(self.view.frame.size.width-20, MAXFLOAT)];
+        
+        self.descriptionView.frame = CGRectMake(10, self.view.frame.size.height -size.height-44, self.view.frame.size.width-20, size.height);
+        if (self.descriptionView.text.length >0) {
+            [self.descriptionViewBackground setHidden:NO];
+            self.descriptionViewBackground.frame = CGRectMake(0, self.view.frame.size.height -size.height-44, self.view.frame.size.width, size.height);
+        }else{
+            [self.descriptionViewBackground setHidden:YES];
+        }
+    }
+}
+
+-(void)updateTitleForIndex:(NSInteger)pageIndex{
+    NSString *localizedString  = MHGalleryLocalizedString(@"imagedetail.title.current");
+    self.navigationItem.title = [NSString stringWithFormat:localizedString,@(pageIndex+1),@(self.galleryItems.count)];
+}
+
+-(void)updateToolBarForItem:(MHGalleryItem*)item{
+    UIBarButtonItem *flex = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
+    [self.tb setItems:@[flex,self.leftBarButton,flex,self.rightBarButton,flex]];
+}
+
+#pragma mark - Viewlifecycle
 
 -(void)viewDidLoad{
     [super viewDidLoad];
@@ -81,7 +122,7 @@
                                                             options:@{ UIPageViewControllerOptionInterPageSpacingKey : @30.f }];
     self.pvc.delegate = self;
     self.pvc.dataSource = self;
-
+    
     if (MHiOS7) {
         self.pvc.automaticallyAdjustsScrollViewInsets =NO;
     }
@@ -113,14 +154,14 @@
     self.tb.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
     
     self.leftBarButton = [[UIBarButtonItem alloc]initWithImage:MHGalleryImage(@"left_arrow")
-                                                style:UIBarButtonItemStyleBordered
-                                               target:self
-                                               action:@selector(leftPressed:)];
+                                                         style:UIBarButtonItemStyleBordered
+                                                        target:self
+                                                        action:@selector(leftPressed:)];
     
     self.rightBarButton = [[UIBarButtonItem alloc]initWithImage:MHGalleryImage(@"right_arrow")
-                                                 style:UIBarButtonItemStyleBordered
-                                                target:self
-                                                action:@selector(rightPressed:)];
+                                                          style:UIBarButtonItemStyleBordered
+                                                         target:self
+                                                         action:@selector(rightPressed:)];
     
     UIBarButtonItem *flex = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
                                                                          target:self
@@ -166,6 +207,50 @@
     
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+    
+    if (![self.descriptionViewBackground isDescendantOfView:self.view]) {
+        [self.view addSubview:self.descriptionViewBackground];
+    }
+    if (![self.descriptionView isDescendantOfView:self.view]) {
+        [self.view addSubview:self.descriptionView];
+    }
+    if (![self.tb isDescendantOfView:self.view]) {
+        [self.view addSubview:self.tb];
+    }
+    [[self.pvc.view.subviews firstObject] setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ];
+}
+
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    self.navigationController.delegate = self;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    if (self.navigationController.delegate == self) {
+        self.navigationController.delegate = nil;
+    }
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle{
+    return  UIStatusBarStyleDefault;
+}
+
+#pragma mark - Actions
+
+#pragma mark UIBarPositioningDelegate
+
+- (UIBarPosition)positionForBar:(id<UIBarPositioning>)bar{
+    return UIBarPositionTopAttached;
+}
+
+#pragma mark UIGestureRecognizerDelegate
+
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     if ([touch.view isKindOfClass:[UIButton class]]) {
         if (touch.view.tag != 508) {
@@ -175,26 +260,7 @@
     return ([touch.view isKindOfClass:[UIControl class]] == NO);
 }
 
--(void)updateDescriptionLabelForIndex:(NSInteger)index{
-    if (index < self.galleryItems.count) {
-        MHGalleryItem *item = self.galleryItems[index];
-        self.descriptionView.text = item.description;
-       
-        if (item.attributedString) {
-            self.descriptionView.attributedText = item.attributedString;
-        }
-        CGSize size = [self.descriptionView sizeThatFits:CGSizeMake(self.view.frame.size.width-20, MAXFLOAT)];
-        
-        self.descriptionView.frame = CGRectMake(10, self.view.frame.size.height -size.height-44, self.view.frame.size.width-20, size.height);
-        if (self.descriptionView.text.length >0) {
-            [self.descriptionViewBackground setHidden:NO];
-            self.descriptionViewBackground.frame = CGRectMake(0, self.view.frame.size.height -size.height-44, self.view.frame.size.width, size.height);
-        }else{
-            [self.descriptionViewBackground setHidden:YES];
-        }
-    }
-}
-
+#pragma mark UIScrollViewDelegate
 
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     self.userScrolls = NO;
@@ -219,88 +285,9 @@
         [self updateDescriptionLabelForIndex:pageIndex];
     }
     [self updateTitleForIndex:pageIndex];
-    
 }
 
--(void)updateTitleForIndex:(NSInteger)pageIndex{
-    NSString *localizedString  = MHGalleryLocalizedString(@"imagedetail.title.current");
-    self.navigationItem.title = [NSString stringWithFormat:localizedString,@(pageIndex+1),@(self.galleryItems.count)];
-}
-
-
--(void)pageViewController:(UIPageViewController *)pageViewController
-       didFinishAnimating:(BOOL)finished
-  previousViewControllers:(NSArray *)previousViewControllers
-      transitionCompleted:(BOOL)completed{
-    
-    self.pageIndex = [[pageViewController.viewControllers firstObject] pageIndex];
-    
-    if (completed) {
-        [self updateToolBarForItem:self.galleryItems[self.pageIndex]];
-    }
-}
-
--(void)updateToolBarForItem:(MHGalleryItem*)item{
-    UIBarButtonItem *flex = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
-    [self.tb setItems:@[flex,self.leftBarButton,flex,self.rightBarButton,flex]];
-}
-
-
-
-- (id<UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController
-                         interactionControllerForAnimationController:(id<UIViewControllerAnimatedTransitioning>)animationController {
-//    if ([animationController isKindOfClass:[MHTransitionShowOverView class]]) {
-//        ImageViewController *imageViewController = [self.pvc.viewControllers firstObject];
-//        return imageViewController.interactiveOverView;
-//    }else {
-        return nil;
-//    }
-}
-
-- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
-                                  animationControllerForOperation:(UINavigationControllerOperation)operation
-                                               fromViewController:(UIViewController *)fromVC
-                                                 toViewController:(UIViewController *)toVC {
-    return nil;
-}
-
--(void)leftPressed:(id)sender{
-    self.rightBarButton.enabled = YES;
-    
-    ImageViewController *theCurrentViewController = [self.pvc.viewControllers firstObject];
-    NSUInteger indexPage = theCurrentViewController.pageIndex;
-    ImageViewController *imageViewController =[ImageViewController imageViewControllerForMHMediaItem:self.galleryItems[indexPage-1]];
-    imageViewController.pageIndex = indexPage-1;
-    imageViewController.vc = self;
-    
-    if (indexPage-1 == 0) {
-        self.leftBarButton.enabled = NO;
-    }
-    __block MHGalleryImageViewerViewController*blockSelf = self;
-    
-    [self.pvc setViewControllers:@[imageViewController] direction:UIPageViewControllerNavigationDirectionReverse animated:YES completion:^(BOOL finished) {
-        blockSelf.pageIndex = imageViewController.pageIndex;
-    }];
-}
-
--(void)rightPressed:(id)sender{
-    [self.leftBarButton setEnabled:YES];
-    ImageViewController *theCurrentViewController = [self.pvc.viewControllers firstObject];
-    NSUInteger indexPage = theCurrentViewController.pageIndex;
-    ImageViewController *imageViewController =[ImageViewController imageViewControllerForMHMediaItem:self.galleryItems[indexPage+1]];
-    imageViewController.pageIndex = indexPage+1;
-    imageViewController.vc = self;
-    
-    if (indexPage+1 == self.galleryItems.count-1) {
-        self.rightBarButton.enabled = NO;
-    }
-    __block MHGalleryImageViewerViewController*blockSelf = self;
-    
-    [self.pvc setViewControllers:@[imageViewController] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:^(BOOL finished) {
-        blockSelf.pageIndex = imageViewController.pageIndex;
-    }];
-}
-
+#pragma mark UIPageViewControllerDataSource
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pvc viewControllerBeforeViewController:(ImageViewController *)vc{
     self.leftBarButton.enabled =YES;
@@ -343,6 +330,36 @@
     return imageViewController;
 }
 
+#pragma mark UIPageViewControllerDelegate
+
+-(void)pageViewController:(UIPageViewController *)pageViewController
+       didFinishAnimating:(BOOL)finished
+  previousViewControllers:(NSArray *)previousViewControllers
+      transitionCompleted:(BOOL)completed{
+    
+    self.pageIndex = [[pageViewController.viewControllers firstObject] pageIndex];
+    
+    if (completed) {
+        [self updateToolBarForItem:self.galleryItems[self.pageIndex]];
+    }
+}
+
+#pragma mark UINavigationControllerDelegate
+
+- (id<UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController
+                         interactionControllerForAnimationController:(id<UIViewControllerAnimatedTransitioning>)animationController {
+        return nil;
+}
+
+- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
+                                  animationControllerForOperation:(UINavigationControllerOperation)operation
+                                               fromViewController:(UIViewController *)fromVC
+                                                 toViewController:(UIViewController *)toVC {
+    return nil;
+}
+
+#pragma mark UIViewControllerRotation
+
 -(void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     self.tb.frame = CGRectMake(0, self.view.frame.size.height-44, self.view.frame.size.width, 44);
     self.pvc.view.bounds = self.view.bounds;
@@ -352,7 +369,10 @@
 
 @end
 
+#pragma mark - ImageViewController
+
 @interface ImageViewController ()
+
 @property (nonatomic, strong) NSNumberFormatter        *numberFormatter;
 @property (nonatomic,strong ) UIPanGestureRecognizer   *pan;
 @property (nonatomic,strong ) MHPinchGestureRecognizer *pinch;
@@ -365,16 +385,80 @@
 
 @end
 
+
 @implementation ImageViewController
 
+#pragma mark - Methods
 
-+(ImageViewController *)imageViewControllerForMHMediaItem:(MHGalleryItem*)item{
++ (ImageViewController *)imageViewControllerForMHMediaItem:(MHGalleryItem*)item
+{
     if (item) {
         return [[self alloc]initWithMHMediaItem:item];
     }
     return nil;
 }
--(CGFloat)checkProgressValue:(CGFloat)progress{
+
+-(void)centerImageView
+{
+    if (self.imageView.image) {
+        CGRect frame  = AVMakeRectWithAspectRatioInsideRect(self.imageView.image.size,CGRectMake(0, 0, self.scrollView.contentSize.width, self.scrollView.contentSize.height));
+        
+        if (self.scrollView.contentSize.width==0 && self.scrollView.contentSize.height==0) {
+            frame = AVMakeRectWithAspectRatioInsideRect(self.imageView.image.size,self.scrollView.bounds);
+        }
+        
+        CGSize boundsSize = self.scrollView.bounds.size;
+        
+        CGRect frameToCenter = CGRectMake(0,0 , frame.size.width, frame.size.height);
+        
+        if (frameToCenter.size.width < boundsSize.width){
+            frameToCenter.origin.x = (boundsSize.width - frameToCenter.size.width) / 2;
+        }else{
+            frameToCenter.origin.x = 0;
+        }
+        if (frameToCenter.size.height < boundsSize.height){
+            frameToCenter.origin.y = (boundsSize.height - frameToCenter.size.height) / 2;
+        }else{
+            frameToCenter.origin.y = 0;
+        }
+        self.imageView.frame = frameToCenter;
+    }
+}
+
+- (void)prepareToResize
+{
+    CGPoint boundsCenter = CGPointMake(CGRectGetMidX(self.scrollView.bounds), CGRectGetMidY(self.scrollView.bounds));
+    self.pointToCenterAfterResize = [self.scrollView convertPoint:boundsCenter toView:self.imageView];
+    self.scaleToRestoreAfterResize = self.scrollView.zoomScale;
+}
+
+- (void)recoverFromResizing
+{
+    self.scrollView.zoomScale = MIN(self.scrollView.maximumZoomScale, MAX(self.scrollView.minimumZoomScale, _scaleToRestoreAfterResize));
+    CGPoint boundsCenter = [self.scrollView convertPoint:self.pointToCenterAfterResize fromView:self.imageView];
+    CGPoint offset = CGPointMake(boundsCenter.x - self.scrollView.bounds.size.width / 2.0,
+                                 boundsCenter.y - self.scrollView.bounds.size.height / 2.0);
+    CGPoint maxOffset = [self maximumContentOffset];
+    CGPoint minOffset = [self minimumContentOffset];
+    offset.x = MAX(minOffset.x, MIN(maxOffset.x, offset.x));
+    offset.y = MAX(minOffset.y, MIN(maxOffset.y, offset.y));
+    self.scrollView.contentOffset = offset;
+}
+
+- (CGPoint)maximumContentOffset
+{
+    CGSize contentSize = self.scrollView.contentSize;
+    CGSize boundsSize = self.scrollView.bounds.size;
+    return CGPointMake(contentSize.width - boundsSize.width, contentSize.height - boundsSize.height);
+}
+
+- (CGPoint)minimumContentOffset
+{
+    return CGPointZero;
+}
+
+- (CGFloat)checkProgressValue:(CGFloat)progress
+{
     CGFloat progressChecked =progress;
     if (progressChecked <0) {
         progressChecked = -progressChecked;
@@ -385,13 +469,13 @@
     return progressChecked;
 }
 
--(void)userDidPinch:(UIPinchGestureRecognizer*)recognizer{
+- (void)userDidPinch:(UIPinchGestureRecognizer*)recognizer
+{
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         if (recognizer.scale <1) {
             self.imageView.frame = self.scrollView.frame;
             
             self.lastPointPop = [recognizer locationInView:self.view];
-//            self.interactiveOverView = [MHTransitionShowOverView new];
             [self.navigationController popViewControllerAnimated:YES];
         }else{
             recognizer.cancelsTouchesInView = YES;
@@ -405,22 +489,14 @@
         }
         
         CGPoint point = [recognizer locationInView:self.view];
-//        self.interactiveOverView.scale = recognizer.scale;
-//        self.interactiveOverView.changedPoint = CGPointMake(self.lastPointPop.x - point.x, self.lastPointPop.y - point.y) ;
-//        [self.interactiveOverView updateInteractiveTransition:1-recognizer.scale];
         self.lastPointPop = point;
     }else if (recognizer.state == UIGestureRecognizerStateEnded || recognizer.state == UIGestureRecognizerStateCancelled) {
-        if (recognizer.scale < 0.65) {
-//            [self.interactiveOverView finishInteractiveTransition];
-        }else{
-//            [self.interactiveOverView cancelInteractiveTransition];
-        }
-//        self.interactiveOverView = nil;
+        
     }
-    
 }
 
--(void)userDidPan:(UIPanGestureRecognizer*)recognizer{
+- (void)userDidPan:(UIPanGestureRecognizer*)recognizer
+{
     BOOL userScrolls = self.vc.userScrolls;
     
     if (![MHGalleryDataManager sharedDataManager].disableToDismissGalleryWithScrollGestureOnStartOrEndPoint) {
@@ -516,6 +592,85 @@
     }
 }
 
+- (void)changeToErrorImage
+{
+    self.imageView.image = MHGalleryImage(@"error");
+}
+
+-(UIView*)statusBarObject{
+    NSString *key = [[NSString alloc] initWithData:[NSData dataWithBytes:(unsigned char []){0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x42, 0x61, 0x72} length:9] encoding:NSASCIIStringEncoding];
+    id object = [UIApplication sharedApplication];
+    UIView *statusBar;
+    if ([object respondsToSelector:NSSelectorFromString(key)]) {
+        statusBar = [object valueForKey:key];
+    }
+    return statusBar;
+}
+
+-(void)handelImageTap:(UIGestureRecognizer *)gestureRecognizer{
+    if (!self.vc.isHiddingToolBarAndNavigationBar) {
+        [UIView animateWithDuration:0.3 animations:^{
+            self.navigationController.navigationBar.alpha =0;
+            self.vc.tb.alpha =0 ;
+            self.scrollView.backgroundColor = [UIColor blackColor];
+            self.vc.pvc.view.backgroundColor = [UIColor blackColor];
+            
+            self.vc.descriptionView.alpha =0;
+            self.vc.descriptionViewBackground.alpha =0;
+            [self statusBarObject].alpha =0 ;
+        } completion:^(BOOL finished) {
+            
+            self.vc.hiddingToolBarAndNavigationBar = YES;
+            self.navigationController.navigationBar.hidden  =YES;
+            self.vc.tb.hidden =YES;
+        }];
+    }else{
+        self.navigationController.navigationBar.hidden = NO;
+        self.vc.tb.hidden = NO;
+        
+        [UIView animateWithDuration:0.3 animations:^{
+            [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+            
+            self.navigationController.navigationBar.alpha =1;
+            self.vc.tb.alpha = 1;
+            self.scrollView.backgroundColor = [UIColor whiteColor];
+            self.vc.pvc.view.backgroundColor = [UIColor whiteColor];
+            [self statusBarObject].alpha =1;
+            self.vc.descriptionView.alpha =1;
+            self.vc.descriptionViewBackground.alpha =1;
+        } completion:^(BOOL finished) {
+            self.vc.hiddingToolBarAndNavigationBar = NO;
+        }];
+        
+    }
+}
+
+- (void)handleDoubleTap:(UIGestureRecognizer *)gestureRecognizer {
+    if ([self.imageView.image isEqual:MHGalleryImage(@"error")]) {
+        return;
+    }
+    if (self.scrollView.zoomScale >1) {
+        [self.scrollView setZoomScale:1 animated:YES];
+        return;
+    }
+    [self centerImageView];
+    
+    CGRect zoomRect;
+    CGFloat newZoomScale = (self.scrollView.maximumZoomScale);
+    CGPoint touchPoint = [gestureRecognizer locationInView:gestureRecognizer.view];
+    
+    zoomRect.size.height = [self.imageView frame].size.height / newZoomScale;
+    zoomRect.size.width  = [self.imageView frame].size.width  / newZoomScale;
+    
+    touchPoint = [self.scrollView convertPoint:touchPoint fromView:self.imageView];
+    
+    zoomRect.origin.x    = touchPoint.x - ((zoomRect.size.width / 2.0));
+    zoomRect.origin.y    = touchPoint.y - ((zoomRect.size.height / 2.0));
+    
+    [self.scrollView zoomToRect:zoomRect animated:YES];
+}
+
+#pragma mark - Lifecycle
 
 - (id)initWithMHMediaItem:(MHGalleryItem*)mediaItem
 {
@@ -579,42 +734,50 @@
         [self.imageView setUserInteractionEnabled:YES];
         
         [imageTap requireGestureRecognizerToFail: doubleTap];
-        if ([self.item.urlString rangeOfString:@"assets-library"].location != NSNotFound) {
-            
-            [self.act stopAnimating];
-            [[MHGalleryDataManager sharedDataManager] getImageFromAssetLibrary:self.item.urlString
-                                                                   assetType:MHAssetImageTypeFull
-                                                                successBlock:^(UIImage *image, NSError *error) {
-                                                                    self.imageView.image = image;
-                                                                }];
-        }else{
-            [[SDWebImageManager sharedManager] downloadWithURL:[NSURL URLWithString:self.item.urlString]
-                                                       options:SDWebImageContinueInBackground
-                                                      progress:nil
-                                                     completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
-                                                         if (!image) {
-                                                             [self.scrollView setMaximumZoomScale:1];
-                                                             [self changeToErrorImage];
-                                                             
-                                                         }else{
-                                                             self.imageView.image = image;
-                                                         }
-                                                         [(UIActivityIndicatorView*)[self.scrollView viewWithTag:507] stopAnimating];
-                                                     }];
-        }
+        [[SDWebImageManager sharedManager] downloadWithURL:[NSURL URLWithString:self.item.urlString]
+                                                   options:SDWebImageContinueInBackground
+                                                  progress:nil
+                                                 completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
+                                                     if (!image) {
+                                                         [self.scrollView setMaximumZoomScale:1];
+                                                         [self changeToErrorImage];
+                                                         
+                                                     }else{
+                                                         self.imageView.image = image;
+                                                     }
+                                                     [(UIActivityIndicatorView*)[self.scrollView viewWithTag:507] stopAnimating];
+                                                 }];
     }
     
     return self;
 }
--(void)changeToErrorImage{
-    self.imageView.image = MHGalleryImage(@"error");
-}
 
--(void)viewDidAppear:(BOOL)animated{
+#pragma mark - Viewlifecycle
+
+- (void)viewDidAppear:(BOOL)animated
+{
     [super viewDidAppear:animated];
 }
 
--(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    if (self.vc.isHiddingToolBarAndNavigationBar) {
+        self.scrollView.backgroundColor = [UIColor blackColor];
+        self.act.color = [UIColor whiteColor];
+    }else{
+        self.scrollView.backgroundColor = [UIColor whiteColor];
+        self.act.color = [UIColor blackColor];
+    }
+}
+
+#pragma mark - Actions
+
+#pragma mark UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
     if (self.interactiveTransition) {
         if ([gestureRecognizer isEqual:self.pan]) {
             return YES;
@@ -630,7 +793,8 @@
     }
     return NO;
 }
--(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
     if ([gestureRecognizer isKindOfClass:[MHPinchGestureRecognizer class]]) {
         if ([gestureRecognizer isKindOfClass:[MHPinchGestureRecognizer class]] && self.scrollView.zoomScale ==1) {
             return YES;
@@ -663,7 +827,8 @@
 }
 
 
--(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
     if (self.interactiveTransition) {
         return NO;
     }
@@ -673,7 +838,7 @@
     if ([gestureRecognizer isKindOfClass:[MHPinchGestureRecognizer class]]) {
         return YES;
     }
-
+    
     if (![MHGalleryDataManager sharedDataManager].disableToDismissGalleryWithScrollGestureOnStartOrEndPoint) {
         if ((self.pageIndex ==0 || self.pageIndex == [MHGalleryDataManager sharedDataManager].galleryItems.count -1) && [gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
             return YES;
@@ -682,169 +847,39 @@
     return NO;
 }
 
--(void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    
-    if (self.vc.isHiddingToolBarAndNavigationBar) {
-        self.scrollView.backgroundColor = [UIColor blackColor];
-        self.act.color = [UIColor whiteColor];
-    }else{
-        self.scrollView.backgroundColor = [UIColor whiteColor];
-        self.act.color = [UIColor blackColor];
-    }
-}
+#pragma mark UIViewControllerRotation
 
--(UIView*)statusBarObject{
-    NSString *key = [[NSString alloc] initWithData:[NSData dataWithBytes:(unsigned char []){0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x42, 0x61, 0x72} length:9] encoding:NSASCIIStringEncoding];
-    id object = [UIApplication sharedApplication];
-    UIView *statusBar;
-    if ([object respondsToSelector:NSSelectorFromString(key)]) {
-        statusBar = [object valueForKey:key];
-    }
-    return statusBar;
-}
-
--(void)handelImageTap:(UIGestureRecognizer *)gestureRecognizer{
-    if (!self.vc.isHiddingToolBarAndNavigationBar) {
-        [UIView animateWithDuration:0.3 animations:^{
-            self.navigationController.navigationBar.alpha =0;
-            self.vc.tb.alpha =0 ;
-            self.scrollView.backgroundColor = [UIColor blackColor];
-            self.vc.pvc.view.backgroundColor = [UIColor blackColor];
-            
-            self.vc.descriptionView.alpha =0;
-            self.vc.descriptionViewBackground.alpha =0;
-            [self statusBarObject].alpha =0 ;
-        } completion:^(BOOL finished) {
-            
-            self.vc.hiddingToolBarAndNavigationBar = YES;
-            self.navigationController.navigationBar.hidden  =YES;
-            self.vc.tb.hidden =YES;
-        }];
-    }else{
-        self.navigationController.navigationBar.hidden = NO;
-        self.vc.tb.hidden = NO;
-        
-        [UIView animateWithDuration:0.3 animations:^{
-            [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
-            
-            self.navigationController.navigationBar.alpha =1;
-            self.vc.tb.alpha = 1;
-            self.scrollView.backgroundColor = [UIColor whiteColor];
-            self.vc.pvc.view.backgroundColor = [UIColor whiteColor];
-            [self statusBarObject].alpha =1;
-            self.vc.descriptionView.alpha =1;
-            self.vc.descriptionViewBackground.alpha =1;
-        } completion:^(BOOL finished) {
-            self.vc.hiddingToolBarAndNavigationBar = NO;
-        }];
-        
-    }
-}
-
-- (void)handleDoubleTap:(UIGestureRecognizer *)gestureRecognizer {
-    if ([self.imageView.image isEqual:MHGalleryImage(@"error")]) {
-        return;
-    }
-    if (self.scrollView.zoomScale >1) {
-        [self.scrollView setZoomScale:1 animated:YES];
-        return;
-    }
-    [self centerImageView];
-
-    CGRect zoomRect;
-    CGFloat newZoomScale = (self.scrollView.maximumZoomScale);
-    CGPoint touchPoint = [gestureRecognizer locationInView:gestureRecognizer.view];
-
-    zoomRect.size.height = [self.imageView frame].size.height / newZoomScale;
-    zoomRect.size.width  = [self.imageView frame].size.width  / newZoomScale;
-    
-    touchPoint = [self.scrollView convertPoint:touchPoint fromView:self.imageView];
-    
-    zoomRect.origin.x    = touchPoint.x - ((zoomRect.size.width / 2.0));
-    zoomRect.origin.y    = touchPoint.y - ((zoomRect.size.height / 2.0));
-    
-    [self.scrollView zoomToRect:zoomRect animated:YES];
-}
-
-
--(UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView{
-    return [scrollView.subviews firstObject];
-}
-
-- (void)prepareToResize{
-    CGPoint boundsCenter = CGPointMake(CGRectGetMidX(self.scrollView.bounds), CGRectGetMidY(self.scrollView.bounds));
-    self.pointToCenterAfterResize = [self.scrollView convertPoint:boundsCenter toView:self.imageView];
-    self.scaleToRestoreAfterResize = self.scrollView.zoomScale;
-}
-- (void)recoverFromResizing{
-    self.scrollView.zoomScale = MIN(self.scrollView.maximumZoomScale, MAX(self.scrollView.minimumZoomScale, _scaleToRestoreAfterResize));
-    CGPoint boundsCenter = [self.scrollView convertPoint:self.pointToCenterAfterResize fromView:self.imageView];
-    CGPoint offset = CGPointMake(boundsCenter.x - self.scrollView.bounds.size.width / 2.0,
-                                 boundsCenter.y - self.scrollView.bounds.size.height / 2.0);
-    CGPoint maxOffset = [self maximumContentOffset];
-    CGPoint minOffset = [self minimumContentOffset];
-    offset.x = MAX(minOffset.x, MIN(maxOffset.x, offset.x));
-    offset.y = MAX(minOffset.y, MIN(maxOffset.y, offset.y));
-    self.scrollView.contentOffset = offset;
-}
-
-
-
-- (CGPoint)maximumContentOffset{
-    CGSize contentSize = self.scrollView.contentSize;
-    CGSize boundsSize = self.scrollView.bounds.size;
-    return CGPointMake(contentSize.width - boundsSize.width, contentSize.height - boundsSize.height);
-}
-
-- (CGPoint)minimumContentOffset{
-    return CGPointZero;
-}
-
--(void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
-                                        duration:(NSTimeInterval)duration{
-    self.scrollView.contentSize = CGSizeMake(self.view.bounds.size.width*self.scrollView.zoomScale, self.view.bounds.size.height*self.scrollView.zoomScale);
-    
-    self.imageView.frame =CGRectMake(0,0 , self.scrollView.contentSize.width,self.scrollView.contentSize.height);
-}
-
--(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
     [self prepareToResize];
     [self recoverFromResizing];
     [self centerImageView];
 }
 
--(void)centerImageView{
-    if(self.imageView.image){
-        CGRect frame  = AVMakeRectWithAspectRatioInsideRect(self.imageView.image.size,CGRectMake(0, 0, self.scrollView.contentSize.width, self.scrollView.contentSize.height));
-        
-        if (self.scrollView.contentSize.width==0 && self.scrollView.contentSize.height==0) {
-            frame = AVMakeRectWithAspectRatioInsideRect(self.imageView.image.size,self.scrollView.bounds);
-        }
-        
-        CGSize boundsSize = self.scrollView.bounds.size;
-        
-        CGRect frameToCenter = CGRectMake(0,0 , frame.size.width, frame.size.height);
-        
-        if (frameToCenter.size.width < boundsSize.width){
-            frameToCenter.origin.x = (boundsSize.width - frameToCenter.size.width) / 2;
-        }else{
-            frameToCenter.origin.x = 0;
-        }
-        if (frameToCenter.size.height < boundsSize.height){
-            frameToCenter.origin.y = (boundsSize.height - frameToCenter.size.height) / 2;
-        }else{
-            frameToCenter.origin.y = 0;
-        }
-        self.imageView.frame = frameToCenter;
-    }
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+                                        duration:(NSTimeInterval)duration
+{
+    self.scrollView.contentSize = CGSizeMake(self.view.bounds.size.width*self.scrollView.zoomScale, self.view.bounds.size.height*self.scrollView.zoomScale);
+    
+    self.imageView.frame =CGRectMake(0,0 , self.scrollView.contentSize.width,self.scrollView.contentSize.height);
 }
--(void)scrollViewDidZoom:(UIScrollView *)scrollView{
+
+#pragma mark UIScrollViewDelegate
+
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
+{
+    return [scrollView.subviews firstObject];
+}
+
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView
+{
     [self centerImageView];
 }
 
--(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
     
 }
+
 @end
 

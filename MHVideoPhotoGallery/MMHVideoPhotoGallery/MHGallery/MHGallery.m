@@ -5,10 +5,6 @@
 #import "SDWebImageDecoder.h"
 #import <objc/runtime.h>
 
-NSString * const MHGalleryViewModeOverView = @"MHGalleryViewModeOverView";
-NSString * const MHGalleryViewModeShare    = @"MHGalleryViewModeShare";
-
-
 NSDictionary *MHDictionaryForQueryString(NSString *string){
 	NSMutableDictionary *dictionary = [NSMutableDictionary new];
 	NSArray *allFieldsArray = [string componentsSeparatedByString:@"&"];
@@ -66,26 +62,6 @@ UIImage *MHGalleryImage(NSString *imageName){
 }
 
 
-@implementation MHShareItem
-
-- (id)initWithImageName:(NSString*)imageName
-                  title:(NSString*)title
-   withMaxNumberOfItems:(NSInteger)maxNumberOfItems
-           withSelector:(NSString*)selectorName
-       onViewController:(id)onViewController{
-    self = [super init];
-    if (!self)
-        return nil;
-    self.imageName = imageName;
-    self.title = title;
-    self.maxNumberOfItems = maxNumberOfItems;
-    self.selectorName = selectorName;
-    self.onViewController = onViewController;
-    return self;
-}
-@end
-
-
 @implementation MHGalleryItem
 
 
@@ -112,21 +88,12 @@ UIImage *MHGalleryImage(NSString *imageName){
     return sharedManagerInstance;
 }
 
--(void)defaultViewModes{
-    if(!self.viewModes){
-        self.viewModes = [NSSet setWithObjects:MHGalleryViewModeOverView,
-                          MHGalleryViewModeShare, nil];
-    }
-}
-
 -(void)presentMHGalleryWithItems:(NSArray*)galleryItems
                         forIndex:(NSInteger)index
         andCurrentViewController:(id)viewcontroller
                   finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex,MHTransitionDismissMHGallery *interactiveTransition,UIImage *image)
                                   )FinishBlock
         withImageViewTransiation:(BOOL)animated{
-    
-    [self defaultViewModes];
 
     self.animateWithCustomTransition =animated;
     self.oldStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
@@ -140,11 +107,9 @@ UIImage *MHGalleryImage(NSString *imageName){
     };
     
     UINavigationController *nav = [UINavigationController new];
-    if (![self.viewModes containsObject:MHGalleryViewModeOverView] || galleryItems.count ==1) {
-        nav.viewControllers = @[detail];
-    }else{
-
-    }
+    
+    nav.viewControllers = @[detail];
+    
     if (animated) {
         if (MHiOS7) {
             nav.transitioningDelegate = viewcontroller;
@@ -152,108 +117,6 @@ UIImage *MHGalleryImage(NSString *imageName){
         nav.modalPresentationStyle = UIModalPresentationFullScreen;
     }
     [viewcontroller presentViewController:nav animated:YES completion:nil];
-}
--(void)getImageFromAssetLibrary:(NSString*)urlString
-                      assetType:(MHAssetImageType)type
-                   successBlock:(void (^)(UIImage *image,NSError *error))succeedBlock{
-    
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        ALAssetsLibrary *assetslibrary = [ALAssetsLibrary new];
-        [assetslibrary assetForURL:[NSURL URLWithString:urlString]
-                       resultBlock:^(ALAsset *asset){
-                           
-                           if (type == MHAssetImageTypeThumb) {
-                               dispatch_sync(dispatch_get_main_queue(), ^(void){
-                                   UIImage *image = [[UIImage alloc]initWithCGImage:asset.thumbnail];
-                                   succeedBlock(image,nil);
-                               });
-                           }else{
-                               ALAssetRepresentation *rep = [asset defaultRepresentation];
-                               CGImageRef iref = [rep fullScreenImage];
-                               if (iref) {
-                                   dispatch_sync(dispatch_get_main_queue(), ^(void){
-                                       UIImage *image = [[UIImage alloc]initWithCGImage:iref];
-                                       succeedBlock(image,nil);
-                                   });
-                               }
-                           }
-                       }
-                      failureBlock:^(NSError *error) {
-                          dispatch_sync(dispatch_get_main_queue(), ^(void){
-                              succeedBlock(nil,error);
-                          });
-                      }];
-    });
-}
-
-
-
--(BOOL)isUIVCBasedStatusBarAppearance{
-    NSNumber *isUIVCBasedStatusBarAppearance = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIViewControllerBasedStatusBarAppearance"];
-    if (isUIVCBasedStatusBarAppearance) {
-        return  isUIVCBasedStatusBarAppearance.boolValue;
-    }
-    return YES;
-}
-
--(void)createThumbURL:(NSString*)urlString
-         successBlock:(void (^)(UIImage *image,NSUInteger videoDuration,NSError *error))succeedBlock{
-    
-    UIImage *image = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:urlString];
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithDictionary:[[NSUserDefaults standardUserDefaults]objectForKey:@"MHGalleryData"]];
-    if (!dict) {
-        dict = [NSMutableDictionary new];
-    }
-    if (image) {
-        succeedBlock(image,[dict[urlString] integerValue],nil);
-    }else{
-//        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-//            NSURL *url = [NSURL URLWithString:urlString];
-//            AVURLAsset *asset=[[AVURLAsset alloc] initWithURL:url options:nil];
-//            
-//            AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-//            CMTime thumbTime = CMTimeMakeWithSeconds(0,40);
-//            CMTime videoDurationTime = asset.duration;
-//            NSUInteger videoDurationTimeInSeconds = CMTimeGetSeconds(videoDurationTime);
-//            
-//            NSMutableDictionary *dictToSave = [self durationDict];
-//            if (videoDurationTimeInSeconds !=0) {
-//                dictToSave[urlString] = @(videoDurationTimeInSeconds);
-//                [self setObjectToUserDefaults:dictToSave];
-//            }
-//            if(self.webPointForThumb == MHWebPointForThumbStart){
-//                thumbTime = CMTimeMakeWithSeconds(0,40);
-//            }else if(self.webPointForThumb == MHWebPointForThumbMiddle){
-//                thumbTime = CMTimeMakeWithSeconds(videoDurationTimeInSeconds/2,40);
-//            }else if(self.webPointForThumb == MHWebPointForThumbEnd){
-//                thumbTime = CMTimeMakeWithSeconds(videoDurationTimeInSeconds,40);
-//            }
-//            
-//            AVAssetImageGeneratorCompletionHandler handler = ^(CMTime requestedTime, CGImageRef im, CMTime actualTime, AVAssetImageGeneratorResult result, NSError *error){
-//                
-//                if (result != AVAssetImageGeneratorSucceeded) {
-//                    dispatch_async(dispatch_get_main_queue(), ^(void){
-//                        succeedBlock(nil,0,error);
-//                    });
-//                }else{
-//                    [[SDImageCache sharedImageCache] storeImage:[UIImage imageWithCGImage:im]
-//                                                         forKey:urlString];
-//                    dispatch_async(dispatch_get_main_queue(), ^(void){
-//                        succeedBlock([UIImage imageWithCGImage:im],videoDurationTimeInSeconds,nil);
-//                    });
-//                }
-//            };
-//            if (self.webThumbQuality == MHWebThumbQualityHD720) {
-//                generator.maximumSize = CGSizeMake(720, 720);
-//            }else if (self.webThumbQuality == MHWebThumbQualityMedium) {
-//                generator.maximumSize = CGSizeMake(420 ,420);
-//            }else if(self.webThumbQuality == MHWebThumbQualitySmall) {
-//                generator.maximumSize = CGSizeMake(220 ,220);
-//            }
-//            [generator generateCGImagesAsynchronouslyForTimes:@[[NSValue valueWithCMTime:thumbTime]]
-//                                            completionHandler:handler];
-//        });
-    }
 }
 
 -(NSString*)languageIdentifier{
@@ -306,8 +169,6 @@ UIImage *MHGalleryImage(NSString *imageName){
                   finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex,UIImage *image,MHTransitionDismissMHGallery *interactiveDismissMHGallery)
                                   )FinishBlock
         customAnimationFromImage:(BOOL)animated{
-    
-    [[MHGalleryDataManager sharedDataManager] defaultViewModes];
     
     [MHGalleryDataManager sharedDataManager].animateWithCustomTransition =animated;
     [MHGalleryDataManager sharedDataManager].oldStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;

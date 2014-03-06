@@ -28,79 +28,6 @@ extern UIImage  *MHGalleryImage(NSString *imageName);
 extern NSDictionary *MHDictionaryForQueryString(NSString *string);
 
 
-extern NSString *const MHYoutubeChannel;
-extern NSString *const MHGalleryViewModeOverView;
-extern NSString *const MHGalleryViewModeShare;
-extern NSString *const MHVimeoBaseURL;
-extern NSString *const MHVimeoThumbBaseURL;
-extern NSString *const MHYoutubeInfoBaseURL;
-extern NSString *const MHYoutubePlayBaseURL;
-
-typedef NS_ENUM(NSUInteger, MHAssetImageType) {
-    MHAssetImageTypeFull,
-    MHAssetImageTypeThumb
-};
-
-typedef NS_ENUM(NSUInteger, MHWebPointForThumb) {
-    MHWebPointForThumbStart, // Default
-    MHWebPointForThumbMiddle, // videoDuration/2
-    MHWebPointForThumbEnd //videoDuration
-};
-
-typedef NS_ENUM(NSUInteger, MHGalleryType) {
-    MHGalleryTypeImage,
-    MHGalleryTypeVideo
-};
-
-typedef NS_ENUM(NSUInteger, MHYoutubeVideoQuality) {
-    MHYoutubeVideoQualityHD720, //Default
-    MHYoutubeVideoQualityMedium,
-    MHYoutubeVideoQualitySmall
-};
-
-typedef NS_ENUM(NSUInteger, MHVimeoVideoQuality) {
-    MHVimeoVideoQualityHD, //Default
-    MHVimeoVideoQualityMobile,
-    MHVimeoVideoQualitySD
-};
-
-typedef NS_ENUM(NSUInteger, MHVimeoThumbQuality) {
-    MHVimeoThumbQualityLarge, //Default
-    MHVimeoThumbQualityMedium,
-    MHVimeoThumbQualitySmall
-};
-
-typedef NS_ENUM(NSUInteger, MHWebThumbQuality) {
-    MHWebThumbQualityHD720, //Default
-    MHWebThumbQualityMedium,
-    MHWebThumbQualitySmall
-};
-
-typedef NS_ENUM(NSUInteger, MHYoutubeThumbQuality) {
-    MHYoutubeThumbQualityHQ, //Default
-    MHYoutubeThumbQualitySQ
-};
-
-
-
-@interface MHShareItem : NSObject
-@property (nonatomic,strong) NSString *imageName;
-@property (nonatomic,strong) NSString *title;
-@property (nonatomic)        NSInteger maxNumberOfItems;
-@property (nonatomic,strong) NSString *selectorName;
-@property (nonatomic)        id onViewController;
-
-
-- (id)initWithImageName:(NSString*)imageName
-                  title:(NSString*)title
-   withMaxNumberOfItems:(NSInteger)maxNumberOfItems
-           withSelector:(NSString*)selectorName
-       onViewController:(id)onViewController;
-
-@end
-
-
-
 @interface MHGalleryItem : NSObject
 
 @property (nonatomic,strong) NSString           *urlString;
@@ -134,24 +61,12 @@ typedef NS_ENUM(NSUInteger, MHYoutubeThumbQuality) {
  *  sets the TintColor for the NavigationBar and the ToolBar
  */
 @property (nonatomic,strong) UIColor *barColor;
-/**
- *  you can set MHGalleryViewModeOverView and MHGalleryViewModeShare
- */
-@property (nonatomic,strong) NSSet *viewModes;
+
 @property (nonatomic,strong) NSArray *galleryItems;
 @property (nonatomic,assign) UIStatusBarStyle oldStatusBarStyle;
 @property (nonatomic,assign) BOOL animateWithCustomTransition;
 
 + (MHGalleryDataManager *)sharedDataManager;
-/**
- *  You can create a Thumbnail from a Video, you can create it from Videos from a Webserver, Youtube and Vimeo
- *
- *  @param urlString    URL as a string
- *  @param duration     the position on whicht the Thumbnail should be created
- *  @param succeedBlock returns the image the duration of the video and an error
- */
--(void)startDownloadingThumbImage:(NSString*)urlString
-                     successBlock:(void (^)(UIImage *image,NSUInteger videoDuration,NSError *error,NSString *newURL))succeedBlock;
 
 - (UIImage *)imageByRenderingView:(id)view;
 
@@ -170,12 +85,6 @@ typedef NS_ENUM(NSUInteger, MHYoutubeThumbQuality) {
                   finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex, MHTransitionDismissMHGallery *interactiveTransition,UIImage *image)
                                   )FinishBlock
         withImageViewTransiation:(BOOL)animated __attribute__((deprecated));
-
--(BOOL)isUIVCBasedStatusBarAppearance;
-
--(void)getImageFromAssetLibrary:(NSString*)urlString
-                      assetType:(MHAssetImageType)type
-                   successBlock:(void (^)(UIImage *image,NSError *error))succeedBlock;
 
 @end
 

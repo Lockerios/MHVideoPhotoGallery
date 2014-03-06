@@ -158,7 +158,6 @@
     
     NSArray *galleryData = self.galleryDataSource[collectionView.tag];
     
-    
     [self presentMHGalleryWithItems:galleryData
                            forIndex:indexPath.row
                       fromImageView:imageView
@@ -176,15 +175,7 @@
                              
                              MHGalleryOverViewCell *cell = (MHGalleryOverViewCell*)[collectionView cellForItemAtIndexPath:newIndexPath];
                              
-                             [galleryNavMH dismissViewControllerAnimated:YES dismissImageView:cell.thumbnail completion:^{
-                                 
-                                 MPMoviePlayerController *player = interactiveDismissMHGallery.moviePlayer;
-                                 
-                                 player.controlStyle = MPMovieControlStyleEmbedded;
-                                 player.view.frame = cell.bounds;
-                                 player.scalingMode = MPMovieScalingModeAspectFill;
-                                 [cell.contentView addSubview:player.view];
-                             }];
+                             [galleryNavMH dismissViewControllerAnimated:YES dismissImageView:cell.thumbnail completion:^{}];
                          });
                          
                      } customAnimationFromImage:YES];
