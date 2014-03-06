@@ -25,7 +25,6 @@
 		F5245DB418AA16D3004C6FFA /* UIImage+GIF.m in Sources */ = {isa = PBXBuildFile; fileRef = F5245DA618AA16D3004C6FFA /* UIImage+GIF.m */; };
 		F5245DB518AA16D3004C6FFA /* UIImage+MultiFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = F5245DA818AA16D3004C6FFA /* UIImage+MultiFormat.m */; };
 		F5245DB618AA16D3004C6FFA /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = F5245DAA18AA16D3004C6FFA /* UIImageView+WebCache.m */; };
-		F536534A1897D11100748466 /* ExampleViewControllerLocal.m in Sources */ = {isa = PBXBuildFile; fileRef = F53653491897D11100748466 /* ExampleViewControllerLocal.m */; };
 		F53F924417EB008100A9FE6A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F53F924317EB008100A9FE6A /* Foundation.framework */; };
 		F53F924617EB008100A9FE6A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F53F924517EB008100A9FE6A /* CoreGraphics.framework */; };
 		F53F924817EB008100A9FE6A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F53F924717EB008100A9FE6A /* UIKit.framework */; };
@@ -77,7 +76,6 @@
 		F58F65051880899200D3A8F9 /* MHShareViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F58F65041880899200D3A8F9 /* MHShareViewController.m */; };
 		F58F65281882F97600D3A8F9 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F58F65271882F97600D3A8F9 /* Social.framework */; };
 		F58F652A1882F97B00D3A8F9 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F58F65291882F97B00D3A8F9 /* MessageUI.framework */; };
-		F58F653D18852F6500D3A8F9 /* Storyboard-iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F58F653C18852F6500D3A8F9 /* Storyboard-iPad.storyboard */; };
 		F5B2EC8017F9D68C000ADC51 /* ExampleViewControllerCollectionViewInTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B2EC7F17F9D68C000ADC51 /* ExampleViewControllerCollectionViewInTableView.m */; };
 		F5B2EC8217F9D70C000ADC51 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F5B2EC8117F9D70C000ADC51 /* Storyboard.storyboard */; };
 		F5C52E8C18C0828E001E431E /* MHTransitionDismissMHGallery.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C52E8318C0828D001E431E /* MHTransitionDismissMHGallery.m */; };
@@ -86,8 +84,6 @@
 		F5C52E8F18C0828E001E431E /* MHTransitionShowOverView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C52E8918C0828D001E431E /* MHTransitionShowOverView.m */; };
 		F5C52E9018C0828E001E431E /* MHTransitionShowShareView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C52E8B18C0828E001E431E /* MHTransitionShowShareView.m */; };
 		F5C52E9318C086E4001E431E /* MHGallery.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C52E9218C086E4001E431E /* MHGallery.m */; };
-		F5D24FFD1885CDDD004D97CA /* ExampleViewControllerTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D24FFC1885CDDD004D97CA /* ExampleViewControllerTableView.m */; };
-		F5D250001885D3D7004D97CA /* ExampleViewControllerImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D24FFF1885D3D7004D97CA /* ExampleViewControllerImageView.m */; };
 		F5D9AB5118B665A80014AAC6 /* MHGallery.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F5D9AB5018B665A80014AAC6 /* MHGallery.bundle */; };
 		F5DBBF25187D577C00BEFE29 /* MHGalleryCells.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DBBF24187D577C00BEFE29 /* MHGalleryCells.m */; };
 		F5DBBF28187D57DD00BEFE29 /* MHOverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DBBF27187D57DD00BEFE29 /* MHOverViewController.m */; };
@@ -139,8 +135,6 @@
 		F5245DA818AA16D3004C6FFA /* UIImage+MultiFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+MultiFormat.m"; path = "External/SDWEBImage/UIImage+MultiFormat.m"; sourceTree = SOURCE_ROOT; };
 		F5245DA918AA16D3004C6FFA /* UIImageView+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImageView+WebCache.h"; path = "External/SDWEBImage/UIImageView+WebCache.h"; sourceTree = SOURCE_ROOT; };
 		F5245DAA18AA16D3004C6FFA /* UIImageView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+WebCache.m"; path = "External/SDWEBImage/UIImageView+WebCache.m"; sourceTree = SOURCE_ROOT; };
-		F53653481897D11100748466 /* ExampleViewControllerLocal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleViewControllerLocal.h; sourceTree = "<group>"; };
-		F53653491897D11100748466 /* ExampleViewControllerLocal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleViewControllerLocal.m; sourceTree = "<group>"; };
 		F53F924017EB008100A9FE6A /* MHVideoPhotoGallery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MHVideoPhotoGallery.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F53F924317EB008100A9FE6A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		F53F924517EB008100A9FE6A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -198,7 +192,6 @@
 		F58F65041880899200D3A8F9 /* MHShareViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MHShareViewController.m; path = MMHVideoPhotoGallery/MHShareViewController/MHShareViewController.m; sourceTree = "<group>"; };
 		F58F65271882F97600D3A8F9 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		F58F65291882F97B00D3A8F9 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
-		F58F653C18852F6500D3A8F9 /* Storyboard-iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Storyboard-iPad.storyboard"; sourceTree = "<group>"; };
 		F5B2EC7E17F9D68C000ADC51 /* ExampleViewControllerCollectionViewInTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleViewControllerCollectionViewInTableView.h; sourceTree = "<group>"; };
 		F5B2EC7F17F9D68C000ADC51 /* ExampleViewControllerCollectionViewInTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleViewControllerCollectionViewInTableView.m; sourceTree = "<group>"; };
 		F5B2EC8117F9D70C000ADC51 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
@@ -214,10 +207,6 @@
 		F5C52E8B18C0828E001E431E /* MHTransitionShowShareView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MHTransitionShowShareView.m; path = MMHVideoPhotoGallery/Transitions/MHTransitionShowShareView.m; sourceTree = "<group>"; };
 		F5C52E9118C086E4001E431E /* MHGallery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MHGallery.h; path = MMHVideoPhotoGallery/MHGallery/MHGallery.h; sourceTree = "<group>"; };
 		F5C52E9218C086E4001E431E /* MHGallery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MHGallery.m; path = MMHVideoPhotoGallery/MHGallery/MHGallery.m; sourceTree = "<group>"; };
-		F5D24FFB1885CDDD004D97CA /* ExampleViewControllerTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleViewControllerTableView.h; sourceTree = "<group>"; };
-		F5D24FFC1885CDDD004D97CA /* ExampleViewControllerTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleViewControllerTableView.m; sourceTree = "<group>"; };
-		F5D24FFE1885D3D7004D97CA /* ExampleViewControllerImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleViewControllerImageView.h; sourceTree = "<group>"; };
-		F5D24FFF1885D3D7004D97CA /* ExampleViewControllerImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleViewControllerImageView.m; sourceTree = "<group>"; };
 		F5D9AB4918B61E390014AAC6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F5D9AB4A18B61E390014AAC6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F5D9AB4B18B6220C0014AAC6 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -344,13 +333,6 @@
 				F53F925317EB008100A9FE6A /* AppDelegate.m */,
 				F5B2EC7E17F9D68C000ADC51 /* ExampleViewControllerCollectionViewInTableView.h */,
 				F5B2EC7F17F9D68C000ADC51 /* ExampleViewControllerCollectionViewInTableView.m */,
-				F5D24FFB1885CDDD004D97CA /* ExampleViewControllerTableView.h */,
-				F5D24FFC1885CDDD004D97CA /* ExampleViewControllerTableView.m */,
-				F53653481897D11100748466 /* ExampleViewControllerLocal.h */,
-				F53653491897D11100748466 /* ExampleViewControllerLocal.m */,
-				F5D24FFE1885D3D7004D97CA /* ExampleViewControllerImageView.h */,
-				F5D24FFF1885D3D7004D97CA /* ExampleViewControllerImageView.m */,
-				F58F653C18852F6500D3A8F9 /* Storyboard-iPad.storyboard */,
 				F5B2EC8117F9D70C000ADC51 /* Storyboard.storyboard */,
 				F53F925B17EB008100A9FE6A /* Images.xcassets */,
 				F53F924A17EB008100A9FE6A /* Supporting Files */,
@@ -631,7 +613,6 @@
 				F553D30A1892B58800BA4283 /* messageMH.png in Resources */,
 				F53F925C17EB008100A9FE6A /* Images.xcassets in Resources */,
 				F553D3161892B58800BA4283 /* sliderPoint@2x.png in Resources */,
-				F58F653D18852F6500D3A8F9 /* Storyboard-iPad.storyboard in Resources */,
 				F553D3181892B58800BA4283 /* twitterMH@2x.png in Resources */,
 				F553D3111892B58800BA4283 /* playButton@2x.png in Resources */,
 				F553D31B1892B58800BA4283 /* videoIcon.png in Resources */,
@@ -693,8 +674,6 @@
 			files = (
 				F5DBBF28187D57DD00BEFE29 /* MHOverViewController.m in Sources */,
 				F54337CE18A3FA9100CA1DAB /* UIImageView+MHGallery.m in Sources */,
-				F5D250001885D3D7004D97CA /* ExampleViewControllerImageView.m in Sources */,
-				F5D24FFD1885CDDD004D97CA /* ExampleViewControllerTableView.m in Sources */,
 				F5C52E8F18C0828E001E431E /* MHTransitionShowOverView.m in Sources */,
 				F5245DB118AA16D3004C6FFA /* SDWebImageManager.m in Sources */,
 				F5245DAE18AA16D3004C6FFA /* SDWebImageDecoder.m in Sources */,
@@ -712,7 +691,6 @@
 				F5245DAC18AA16D3004C6FFA /* SDImageCache.m in Sources */,
 				F5C52E8D18C0828E001E431E /* MHTransitionPresentMHGallery.m in Sources */,
 				F5245DAF18AA16D3004C6FFA /* SDWebImageDownloader.m in Sources */,
-				F536534A1897D11100748466 /* ExampleViewControllerLocal.m in Sources */,
 				F5245DB518AA16D3004C6FFA /* UIImage+MultiFormat.m in Sources */,
 				F5C52E8E18C0828E001E431E /* MHTransitionShowDetail.m in Sources */,
 				F5245DB318AA16D3004C6FFA /* UIButton+WebCache.m in Sources */,
@@ -856,7 +834,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -876,7 +854,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
