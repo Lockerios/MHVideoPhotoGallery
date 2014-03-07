@@ -29,6 +29,30 @@
 
 @implementation ExampleViewController
 
+#pragma mark - Methods
+
+- (void)makeOverViewDetailCell:(MHGalleryViewCell*)cell atIndexPath:(NSIndexPath*)indexPath
+{
+    NSLog(@"makeOverViewDetailCell called: %ld",(long)indexPath.row);
+    
+    MHGalleryItem *item = self.galleryDataSource[indexPath.section][indexPath.row];
+    
+    [cell.thumbnail setContentMode:UIViewContentModeScaleAspectFill];
+    
+    cell.thumbnail.layer.shadowOffset = CGSizeMake(0, 0);
+    cell.thumbnail.layer.shadowRadius = 1.0;
+    cell.thumbnail.layer.shadowColor = [UIColor blackColor].CGColor;
+    cell.thumbnail.layer.shadowOpacity = 0.5;
+    cell.thumbnail.layer.shadowPath = [UIBezierPath bezierPathWithRect:cell.thumbnail.bounds].CGPath;
+    cell.thumbnail.layer.cornerRadius = 2.0;
+    
+    cell.thumbnail.image = nil;
+    [cell.thumbnail setImageWithURL:[NSURL URLWithString:item.urlString]];
+}
+
+
+#pragma mark - Lifecycle
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -66,15 +90,20 @@
 //    
 //    landschaft10.attributedString = string;
     
-//    self.galleryDataSource = @[@[landschaft10,landschaft8,landschaft7,landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1,landschaft10,landschaft8,landschaft7,landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1,landschaft10,landschaft8,landschaft7,landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
-//                               @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
-//                               @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1]
-//                               ];
-    self.galleryDataSource = @[@[landschaft9,landschaft6,landschaft5,landschaft4]];
+    self.galleryDataSource = @[@[landschaft10,landschaft8,landschaft7,landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1,landschaft10,landschaft8,landschaft7,landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1,landschaft10,landschaft8,landschaft7,landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
+                               @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
+                               @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft],
+                               @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3],
+                               @[landschaft9,landschaft6,landschaft5,landschaft4],
+                               @[landschaft9,landschaft6,landschaft5],
+                               @[landschaft9,landschaft6],
+                               @[landschaft9]
+                               ];
     
     MHGalleryView* view = [[MHGalleryView alloc] initWithFrame:self.view.frame];
     view.delegate = self;
-    [view updateData:self.galleryDataSource];
+    [view updateData];
+    
     [self.view addSubview:view];
 }
 
@@ -86,6 +115,8 @@
 #pragma mark - Actions
 
 #pragma mark MHGalleryViewDelegate
+
+#pragma mark UITableView
 
 - (NSInteger)numberOfRowsInSectionInMHTable
 {
@@ -102,22 +133,55 @@
     return 330;
 }
 
-- (UITableViewCell *)cellForRowAtIndexPathInMHTable:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath reuseCellIdentifier:(NSString *)identifier inMH:(MHGalleryView *)galleryView
+- (UITableViewCell *)cellForRowAtIndexPathInMHTable:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath reuseCellIdentifier:(NSString *)identifier reuseCollectionIdentifier:(NSString *)cIdentifier inMH:(MHGalleryView *)galleryView
 {
     MHGalleryTableViewCell *cell = (MHGalleryTableViewCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
     
     if (!cell){
         cell = [[MHGalleryTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+        
+        cell.backgroundColor = [UIColor clearColor];
+        
+        cell.backView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 330)];
+        
+        cell.backView.layer.masksToBounds = NO;
+        cell.backView.layer.shadowOffset = CGSizeMake(0, 0);
+        cell.backView.layer.shadowRadius = 1.0;
+        cell.backView.layer.shadowColor = [UIColor blackColor].CGColor;
+        cell.backView.layer.shadowOpacity = 0.5;
+        cell.backView.layer.shadowPath = [UIBezierPath bezierPathWithRect:cell.backView.bounds].CGPath;
+        cell.backView.layer.cornerRadius = 2.0;
+        
+        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+        layout.sectionInset = UIEdgeInsetsMake(0, 25, 0, 25);
+        layout.itemSize = CGSizeMake(270, 225);
+        layout.minimumLineSpacing = 15;
+        layout.minimumInteritemSpacing = 15;
+        layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+        
+        cell.collectionView = [[UICollectionView alloc] initWithFrame:cell.bounds collectionViewLayout:layout];
+        cell.collectionView.backgroundColor = [UIColor clearColor];
+        
+        [cell.collectionView registerClass:[MHGalleryViewCell class] forCellWithReuseIdentifier:cIdentifier];
+        
+        cell.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+        
+        [cell.collectionView setShowsHorizontalScrollIndicator:NO];
+        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        [cell.contentView addSubview:cell.backView];
+        [cell.contentView addSubview:cell.collectionView];
     }
-    
-    [cell.lbl setText:[NSString stringWithFormat:@"%ld %ld",indexPath.row, [[_galleryDataSource objectAtIndex:indexPath.row] count]]];
     
     [cell.collectionView setDelegate:galleryView];
     [cell.collectionView setDataSource:galleryView];
+    [cell.collectionView setTag:indexPath.section];
     [cell.collectionView reloadData];
     
     return cell;
 }
+
+#pragma mark UICollectionView
 
 - (NSInteger)numberOfSectionsInCollectionView
 {
@@ -126,7 +190,20 @@
 
 - (NSInteger)numberOfCellInCollectionViewWithTag:(NSInteger)collectionTag
 {
+    NSLog(@"numberOfCellInCollectionViewWithTag: %ld",(long)[self.galleryDataSource[collectionTag] count]);
+    
     return [self.galleryDataSource[collectionTag] count];
+}
+
+-(UICollectionViewCell *)cellForItemAtIndexPathInMHCollection:(UICollectionView *)collection atIndexPath:(NSIndexPath *)indexPath reuseCellIdentifier:(NSString *)identifier
+{
+    UICollectionViewCell *cell =nil;
+    cell = [collection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+    
+    NSIndexPath *indexPathNew = [NSIndexPath indexPathForRow:indexPath.row inSection:collection.tag];
+    [self makeOverViewDetailCell:(MHGalleryViewCell*)cell atIndexPath:indexPathNew];
+    
+    return cell;
 }
 
 - (void)galleryViewDidTap:(NSArray *)array imageView:(UIImageView *)imageView forRow:(NSInteger)row inView:(UICollectionView *)view
