@@ -9,20 +9,22 @@
 #import "AppDelegate.h"
 #import "MHGallery.h"
 
+#import "ExampleViewControllerCollectionViewInTableView.h"
+
 @implementation AppDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions{
-   
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
     self.window.tintColor = [UIColor colorWithRed:1 green:0.18 blue:0.33 alpha:1];
     self.window.backgroundColor = [UIColor blackColor];
-    MHGalleryCustomLocalizationBlock(^NSString *(NSString *stringToLocalize) {
-        return nil;
-    });
     
-    MHGalleryCustomImageBlock(^UIImage *(NSString *imageToChangeName) {
-        return nil;
-    });
-
+    ExampleViewControllerCollectionViewInTableView* vc = [[ExampleViewControllerCollectionViewInTableView alloc] init];
+    self.window.rootViewController = vc;
+    
+    [self.window makeKeyAndVisible];
+    
     return YES;
     
 }

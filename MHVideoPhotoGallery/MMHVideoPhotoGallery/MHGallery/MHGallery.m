@@ -119,8 +119,8 @@ UIImage *MHGalleryImage(NSString *imageName){
 -(void)presentMHGalleryWithItems:(NSArray*)galleryItems
                         forIndex:(NSInteger)index
                    fromImageView:(UIImageView*)fromImageView
-        withInteractiveTranstion:(MHTransitionPresentMHGallery*)presentInteractive
-                  finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex,UIImage *image,MHTransitionDismissMHGallery *interactiveDismissMHGallery)
+        withInteractiveTranstion:(MHPresentMHGalleryTransition*)presentInteractive
+                  finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex,UIImage *image,MHDismissMHGalleryTransition *interactiveDismissMHGallery)
                                   )FinishBlock
         customAnimationFromImage:(BOOL)animated
 {
@@ -135,7 +135,7 @@ UIImage *MHGalleryImage(NSString *imageName){
     detail.presentingFromImageView = fromImageView;
     detail.finishedCallback = ^(UINavigationController *galleryNavMH,
                                 NSUInteger photoIndex,
-                                MHTransitionDismissMHGallery *interactiveTransition,
+                                MHDismissMHGalleryTransition *interactiveTransition,
                                 UIImage *image) {
         FinishBlock(galleryNavMH,photoIndex,image,interactiveTransition);
     };
@@ -157,7 +157,7 @@ UIImage *MHGalleryImage(NSString *imageName){
 -(void)presentMHGalleryWithItems:(NSArray*)galleryItems
                         forIndex:(NSInteger)index
                    fromImageView:(UIImageView*)fromImageView
-                  finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex,UIImage *image,MHTransitionDismissMHGallery *interactiveTransition)
+                  finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex,UIImage *image,MHDismissMHGalleryTransition *interactiveTransition)
                                   )FinishBlock
         customAnimationFromImage:(BOOL)animated{
     
@@ -179,8 +179,8 @@ UIImage *MHGalleryImage(NSString *imageName){
 
 
 -(id<UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id<UIViewControllerAnimatedTransitioning>)animator{
-    if ([animator isKindOfClass:[MHTransitionPresentMHGallery class]]) {
-        MHTransitionPresentMHGallery *animatorPresent = (MHTransitionPresentMHGallery*)animator;
+    if ([animator isKindOfClass:[MHPresentMHGalleryTransition class]]) {
+        MHPresentMHGalleryTransition *animatorPresent = (MHPresentMHGalleryTransition*)animator;
         if (animatorPresent.interactive) {
             return animatorPresent;
         }
@@ -191,8 +191,8 @@ UIImage *MHGalleryImage(NSString *imageName){
 }
 
 -(id<UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id<UIViewControllerAnimatedTransitioning>)animator{
-    if ([animator isKindOfClass:[MHTransitionDismissMHGallery class]]) {
-        MHTransitionDismissMHGallery *animatorDismiss = (MHTransitionDismissMHGallery*)animator;
+    if ([animator isKindOfClass:[MHDismissMHGalleryTransition class]]) {
+        MHDismissMHGalleryTransition *animatorDismiss = (MHDismissMHGalleryTransition*)animator;
         if (animatorDismiss.interactive) {
             return animatorDismiss;
         }
@@ -208,11 +208,11 @@ UIImage *MHGalleryImage(NSString *imageName){
         MHGalleryImageViewerViewController *imageViewer = [(UINavigationController*)dismissed  viewControllers].lastObject;
         ImageViewController *viewer = imageViewer.pvc.viewControllers.firstObject;
         if (viewer.interactiveTransition) {
-            MHTransitionDismissMHGallery *detail = viewer.interactiveTransition;
+            MHDismissMHGalleryTransition *detail = viewer.interactiveTransition;
             detail.transitionImageView = imageViewer.dismissFromImageView;
             return detail;
         }
-        MHTransitionDismissMHGallery *detail = [MHTransitionDismissMHGallery new];
+        MHDismissMHGalleryTransition *detail = [MHDismissMHGalleryTransition new];
         detail.transitionImageView = imageViewer.dismissFromImageView;
         return detail;
     }
@@ -227,11 +227,11 @@ UIImage *MHGalleryImage(NSString *imageName){
         MHGalleryImageViewerViewController *imageViewer = nav.viewControllers.lastObject;
         
         if (imageViewer.interactivePresentationTranstion) {
-            MHTransitionPresentMHGallery *detail = imageViewer.interactivePresentationTranstion;
+            MHPresentMHGalleryTransition *detail = imageViewer.interactivePresentationTranstion;
             detail.presentingImageView = imageViewer.presentingFromImageView;
             return detail;
         }
-        MHTransitionPresentMHGallery *detail = [MHTransitionPresentMHGallery new];
+        MHPresentMHGalleryTransition *detail = [MHPresentMHGalleryTransition new];
         detail.presentingImageView = imageViewer.presentingFromImageView;
         return detail;
     }

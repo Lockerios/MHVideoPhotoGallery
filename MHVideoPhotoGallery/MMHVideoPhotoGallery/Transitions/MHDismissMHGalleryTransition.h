@@ -8,9 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "MHGallery.h"
-#import "MHUIImageViewContentViewAnimation.h"
+#import "MHContentViewAnimationUIImageView.h"
 
-@interface MHTransitionDismissMHGallery : UIPercentDrivenInteractiveTransition<UIViewControllerAnimatedTransitioning>
+@interface MHDismissMHGalleryTransition : UIPercentDrivenInteractiveTransition<UIViewControllerAnimatedTransitioning>
 
 @property (nonatomic,strong)    UIImageView *transitionImageView;
 @property (nonatomic,assign)    CGPoint changedPoint;

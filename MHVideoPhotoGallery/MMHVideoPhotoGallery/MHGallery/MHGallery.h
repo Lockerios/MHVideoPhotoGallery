@@ -6,16 +6,15 @@
 #import <QuartzCore/QuartzCore.h>
 #import "SDImageCache.h"
 #import "UIImageView+WebCache.h"
-#import "MHTransitionDismissMHGallery.h"
-#import "MHTransitionPresentMHGallery.h"
-#import "MHPresenterImageView.h"
+#import "MHDismissMHGalleryTransition.h"
+#import "MHPresentMHGalleryTransition.h"
 
 #define kMHGalleryBundleName @"MHGallery.bundle"
 
 #define MHiOS7 ([[[UIDevice currentDevice] systemVersion] floatValue]>=7.0)
 
-@class MHTransitionDismissMHGallery;
-@class MHTransitionPresentMHGallery;
+@class MHDismissMHGalleryTransition;
+@class MHPresentMHGalleryTransition;
 @class MHPresenterImageView;
 
 extern void MHGalleryCustomLocalizationBlock(NSString *(^customLocalizationBlock)(NSString *stringToLocalize));
@@ -83,7 +82,7 @@ extern UIImage  *MHGalleryImage(NSString *imageName);
 -(void)presentMHGalleryWithItems:(NSArray*)galleryItems
                         forIndex:(NSInteger)index
                    fromImageView:(UIImageView*)fromImageView
-                  finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex,UIImage *image,MHTransitionDismissMHGallery *interactiveDismissMHGallery)
+                  finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex,UIImage *image,MHDismissMHGalleryTransition *interactiveDismissMHGallery)
                                   )FinishBlock
                         customAnimationFromImage:(BOOL)animated;
 
@@ -94,8 +93,8 @@ extern UIImage  *MHGalleryImage(NSString *imageName);
 -(void)presentMHGalleryWithItems:(NSArray*)galleryItems
                         forIndex:(NSInteger)index
                    fromImageView:(UIImageView*)fromImageView
-        withInteractiveTranstion:(MHTransitionPresentMHGallery*)presentInteractive
-                  finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex,UIImage *image,MHTransitionDismissMHGallery *interactiveDismissMHGallery)
+        withInteractiveTranstion:(MHPresentMHGalleryTransition*)presentInteractive
+                  finishCallback:(void(^)(UINavigationController *galleryNavMH,NSInteger pageIndex,UIImage *image,MHDismissMHGalleryTransition *interactiveDismissMHGallery)
                                   )FinishBlock
         customAnimationFromImage:(BOOL)animated;
 

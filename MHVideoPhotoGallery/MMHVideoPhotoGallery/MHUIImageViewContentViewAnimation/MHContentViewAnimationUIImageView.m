@@ -6,10 +6,10 @@
 //  Copyright (c) 2013 Mario Hahn. All rights reserved.
 //
 
-#import "MHUIImageViewContentViewAnimation.h"
+#import "MHContentViewAnimationUIImageView.h"
 #import "MHGallery.h"
 
-@interface MHUIImageViewContentViewAnimation ()
+@interface MHContentViewAnimationUIImageView ()
 
 @property (nonatomic,readwrite) CGRect changedFrameWrapper;
 @property (nonatomic,readwrite) CGRect changedFrameImage;
@@ -17,7 +17,7 @@
 
 @end
 
-@implementation MHUIImageViewContentViewAnimation
+@implementation MHContentViewAnimationUIImageView
 
 #pragma mark - Methods
 

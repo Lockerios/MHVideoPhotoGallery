@@ -6,18 +6,18 @@
 //  Copyright (c) 2013 Mario Hahn. All rights reserved.
 //
 
-#import "MHTransitionPresentMHGallery.h"
+#import "MHPresentMHGalleryTransition.h"
 #import "MHGallery.h"
 #import "MHGalleryImageViewerViewController.h"
 
-@interface MHTransitionPresentMHGallery()
+@interface MHPresentMHGalleryTransition()
 @property (nonatomic, strong) UINavigationController *interactiveToViewController;
 @property (nonatomic, strong) UIView                 *backView;
 @property (nonatomic)         CGRect                 startFrame;
 @end
 
 
-@implementation MHTransitionPresentMHGallery
+@implementation MHPresentMHGalleryTransition
 
 
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext
@@ -28,7 +28,7 @@
     UIView *containerView = [transitionContext containerView];
     NSTimeInterval duration = [self transitionDuration:transitionContext];
     
-    MHUIImageViewContentViewAnimation *cellImageSnapshot = [[MHUIImageViewContentViewAnimation alloc] initWithFrame:[containerView convertRect:self.presentingImageView.frame fromView:self.presentingImageView.superview]];
+    MHContentViewAnimationUIImageView *cellImageSnapshot = [[MHContentViewAnimationUIImageView alloc] initWithFrame:[containerView convertRect:self.presentingImageView.frame fromView:self.presentingImageView.superview]];
     cellImageSnapshot.image = self.presentingImageView.image;
     self.presentingImageView.hidden = YES;
     
@@ -95,7 +95,7 @@
     
     UIView *containerView = [transitionContext containerView];
     
-    self.transitionImageView = [[MHUIImageViewContentViewAnimation alloc] initWithFrame:[containerView convertRect:self.presentingImageView.frame fromView:self.presentingImageView.superview]];
+    self.transitionImageView = [[MHContentViewAnimationUIImageView alloc] initWithFrame:[containerView convertRect:self.presentingImageView.frame fromView:self.presentingImageView.superview]];
     self.transitionImageView.image = self.presentingImageView.image;
     self.transitionImageView.contentMode = self.presentingImageView.contentMode;
     self.presentingImageView.hidden = YES;

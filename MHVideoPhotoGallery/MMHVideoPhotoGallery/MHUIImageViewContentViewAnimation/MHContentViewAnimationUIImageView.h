@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MHUIImageViewContentViewAnimation : UIImageView
+@interface MHContentViewAnimationUIImageView : UIImageView
 
 -(void)animateToViewMode:(UIViewContentMode)contenMode
                 forFrame:(CGRect)frame

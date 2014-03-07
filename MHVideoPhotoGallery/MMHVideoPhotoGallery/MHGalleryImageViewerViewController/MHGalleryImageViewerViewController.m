@@ -33,7 +33,7 @@
 -(void)donePressed{
     ImageViewController *imageViewer = self.pvc.viewControllers.firstObject;
     
-    MHTransitionDismissMHGallery *dismissTransiton = [MHTransitionDismissMHGallery new];
+    MHDismissMHGalleryTransition *dismissTransiton = [MHDismissMHGalleryTransition new];
     dismissTransiton.orientationTransformBeforeDismiss = [(NSNumber *)[self.navigationController.view valueForKeyPath:@"layer.transform.rotation.z"] floatValue];
     self.finishedCallback(self.navigationController,self.pageIndex,dismissTransiton,imageViewer.imageView.image);
 }
@@ -537,7 +537,7 @@
             if (!self.interactiveTransition ) {
                 self.startPoint = [(UIPanGestureRecognizer*)recognizer translationInView:self.view];
                 self.lastPoint = [(UIPanGestureRecognizer*)recognizer translationInView:self.view];
-                self.interactiveTransition = [MHTransitionDismissMHGallery new];
+                self.interactiveTransition = [MHDismissMHGalleryTransition new];
                 self.interactiveTransition.orientationTransformBeforeDismiss = [(NSNumber *)[self.navigationController.view valueForKeyPath:@"layer.transform.rotation.z"] floatValue];
                 self.interactiveTransition.interactive = YES;
                 

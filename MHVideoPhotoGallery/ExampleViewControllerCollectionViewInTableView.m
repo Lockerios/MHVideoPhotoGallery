@@ -10,15 +10,7 @@
 #import "MHGalleryImageViewerViewController.h"
 #import "MHGalleryCells.h"
 
-@implementation UITabBarController (autoRotate)
-- (BOOL)shouldAutorotate {
-    return [self.selectedViewController shouldAutorotate];
-}
-- (NSUInteger)supportedInterfaceOrientations {
-    return [self.selectedViewController supportedInterfaceOrientations];
-}
-@end
-
+#import "MHGalleryView.h"
 
 @implementation UINavigationController (autoRotate)
 
@@ -31,10 +23,6 @@
 
 @end
 
-
-@implementation TestCell
-@end
-
 @interface ExampleViewControllerCollectionViewInTableView ()
 @property(nonatomic,strong) NSArray *galleryDataSource;
 @end
@@ -44,7 +32,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     
     self.title = @"CollectionInTable";
    
@@ -70,7 +57,6 @@
     
     MHGalleryItem *landschaft10 = [[MHGalleryItem alloc]initWithURL:@"http://4.bp.blogspot.com/-8O0ZkAgb6Bo/Ulf_80tUN6I/AAAAAAAAH34/I1L2lKjzE9M/s1600/Beautiful-Scenery-Wallpapers.jpg"];
 
-    
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc]initWithString:@"Awesome!!\nOr isn't it?"];
     
     [string setAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:15]} range:NSMakeRange(0, string.length)];
@@ -81,128 +67,43 @@
     
     self.galleryDataSource = @[@[landschaft10,landschaft8,landschaft7,landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1,landschaft10,landschaft8,landschaft7,landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1,landschaft10,landschaft8,landschaft7,landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
                                @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
+                               @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
+                               @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
+                               @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
+                               @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
+                               @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
                                @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1]
                                ];
-    self.tableView.backgroundColor = [UIColor colorWithRed:0.83 green:0.84 blue:0.86 alpha:1];
-    [self.tableView reloadData];
+
+    MHGalleryView* view = [[MHGalleryView alloc] initWithFrame:self.view.frame];
+    view.delegate = self;
+    [view updateData:self.galleryDataSource];
+    [self.view addSubview:view];
 }
 
--(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return self.galleryDataSource.count;
-}
--(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return [self.galleryDataSource[collectionView.tag] count];
-}
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 330;
-}
--(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    return 1;
-}
+#pragma mark - Actions
 
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 1;
-}
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSString *cellIdentifier = nil;
-    cellIdentifier = @"TestCell";
-    
-    TestCell *cell = (TestCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    
-    if (!cell){
-        cell = [[TestCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-    }
-    cell.backView.layer.masksToBounds = NO;
-    cell.backView.layer.shadowOffset = CGSizeMake(0, 0);
-    cell.backView.layer.shadowRadius = 1.0;
-    cell.backView.layer.shadowColor = [UIColor blackColor].CGColor;
-    cell.backView.layer.shadowOpacity = 0.5;
-    cell.backView.layer.shadowPath = [UIBezierPath bezierPathWithRect:cell.backView.bounds].CGPath;
-    cell.backView.layer.cornerRadius = 2.0;
-    
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    layout.sectionInset = UIEdgeInsetsMake(0, 25, 0, 25);
-    layout.itemSize = CGSizeMake(270, 225);
-    layout.minimumLineSpacing = 15;
-    layout.minimumInteritemSpacing = 15;
-    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    cell.collectionView.collectionViewLayout = layout;
-    
-    [cell.collectionView registerClass:[MHGalleryViewCell class] forCellWithReuseIdentifier:@"MHGalleryOverViewCell"];
-    
-    cell.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    
-    [cell.collectionView setShowsHorizontalScrollIndicator:NO];
-    [cell.collectionView setDelegate:self];
-    [cell.collectionView setDataSource:self];
-    [cell.collectionView setTag:indexPath.section];
-    [cell.collectionView reloadData];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    return cell;
-}
-
--(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    UICollectionViewCell *cell =nil;
-    NSString *cellIdentifier = @"MHGalleryOverViewCell";
-    cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
-    NSIndexPath *indexPathNew = [NSIndexPath indexPathForRow:indexPath.row inSection:collectionView.tag];
-    [self makeOverViewDetailCell:(MHGalleryViewCell*)cell atIndexPath:indexPathNew];
-    
-    return cell;
-}
-
-
--(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    
-    UIImageView *imageView = [(MHGalleryViewCell*)[collectionView cellForItemAtIndexPath:indexPath] thumbnail];
-    
-    NSArray *galleryData = self.galleryDataSource[collectionView.tag];
-    
-    [self presentMHGalleryWithItems:galleryData
-                           forIndex:indexPath.row
+-(void)galleryViewDidTap:(NSArray *)array imageView:(UIImageView *)imageView forRow:(NSInteger)row inView:(UICollectionView *)view
+{
+    [self presentMHGalleryWithItems:array
+                           forIndex:row
                       fromImageView:imageView
-                     finishCallback:^(UINavigationController *galleryNavMH, NSInteger pageIndex, UIImage *image,MHTransitionDismissMHGallery *interactiveDismissMHGallery) {
+                     finishCallback:^(UINavigationController *galleryNavMH, NSInteger pageIndex, UIImage *image,MHDismissMHGalleryTransition *interactiveDismissMHGallery) {
                          NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:pageIndex inSection:0];
-                         CGRect cellFrame  = [[collectionView collectionViewLayout] layoutAttributesForItemAtIndexPath:newIndexPath].frame;
-                         [collectionView scrollRectToVisible:cellFrame
+                         CGRect cellFrame  = [[view collectionViewLayout] layoutAttributesForItemAtIndexPath:newIndexPath].frame;
+                         [view scrollRectToVisible:cellFrame
                                                     animated:NO];
                          
                          dispatch_async(dispatch_get_main_queue(), ^{
-                             [collectionView reloadItemsAtIndexPaths:@[newIndexPath]];
-                             [collectionView scrollToItemAtIndexPath:newIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+                             [view reloadItemsAtIndexPaths:@[newIndexPath]];
+                             [view scrollToItemAtIndexPath:newIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
                              
-                             MHGalleryViewCell *cell = (MHGalleryViewCell*)[collectionView cellForItemAtIndexPath:newIndexPath];
+                             MHGalleryViewCell *cell = (MHGalleryViewCell*)[view cellForItemAtIndexPath:newIndexPath];
                              
                              [galleryNavMH dismissViewControllerAnimated:YES dismissImageView:cell.thumbnail completion:^{}];
                          });
                          
                      } customAnimationFromImage:YES];
 }
-
--(NSUInteger)supportedInterfaceOrientations{
-    return UIInterfaceOrientationMaskPortrait;
-}
-
--(BOOL)shouldAutorotate{
-    return YES;
-}
-
-
--(void)makeOverViewDetailCell:(MHGalleryViewCell*)cell atIndexPath:(NSIndexPath*)indexPath{
-    MHGalleryItem *item = self.galleryDataSource[indexPath.section][indexPath.row];
-    
-    [cell.thumbnail setContentMode:UIViewContentModeScaleAspectFill];
-    
-    cell.thumbnail.layer.shadowOffset = CGSizeMake(0, 0);
-    cell.thumbnail.layer.shadowRadius = 1.0;
-    cell.thumbnail.layer.shadowColor = [UIColor blackColor].CGColor;
-    cell.thumbnail.layer.shadowOpacity = 0.5;
-    cell.thumbnail.layer.shadowPath = [UIBezierPath bezierPathWithRect:cell.thumbnail.bounds].CGPath;
-    cell.thumbnail.layer.cornerRadius = 2.0;
-    
-    cell.thumbnail.image = nil;
-    [cell.thumbnail setImageWithURL:[NSURL URLWithString:item.urlString]];
-}
-
 
 @end

@@ -8,19 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "MHGallery.h"
+#import "MHGalleryView.h"
 
 @interface UINavigationController (autoRotate)
 @end
 
-
-@interface UITabBarController (autoRotate)
-@end
-
-@interface TestCell : UITableViewCell
-@property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
-@property (strong, nonatomic) IBOutlet UIView *backView;
-@end
-
-@interface ExampleViewControllerCollectionViewInTableView : UIViewController<UITableViewDataSource,UITableViewDelegate,UICollectionViewDataSource,UICollectionViewDelegate,UIViewControllerTransitioningDelegate>
-@property (strong,nonatomic) IBOutlet UITableView *tableView;
+@interface ExampleViewControllerCollectionViewInTableView : UIViewController<UIViewControllerTransitioningDelegate,MHGalleryViewDelegate>
 @end

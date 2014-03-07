@@ -6,10 +6,10 @@
 //  Copyright (c) 2014 Mario Hahn. All rights reserved.
 //
 
-#import "MHTransitionDismissMHGallery.h"
+#import "MHDismissMHGalleryTransition.h"
 #import "MHGalleryImageViewerViewController.h"
 
-@interface MHTransitionDismissMHGallery()
+@interface MHDismissMHGalleryTransition()
 
 @property (nonatomic,assign) CGFloat toTransform;
 @property (nonatomic,assign) CGFloat startTransform;
@@ -18,12 +18,12 @@
 
 @property (nonatomic,strong) UIView *backView;
 @property (nonatomic,strong) UIView *containerView;
-@property (nonatomic,strong) MHUIImageViewContentViewAnimation *cellImageSnapshot;
+@property (nonatomic,strong) MHContentViewAnimationUIImageView *cellImageSnapshot;
 
 @end
 
 
-@implementation MHTransitionDismissMHGallery
+@implementation MHDismissMHGalleryTransition
 
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext
 {
@@ -48,7 +48,7 @@
         }
     }
     
-    MHUIImageViewContentViewAnimation *cellImageSnapshot = [[MHUIImageViewContentViewAnimation alloc] initWithFrame:fromViewController.view.bounds];
+    MHContentViewAnimationUIImageView *cellImageSnapshot = [[MHContentViewAnimationUIImageView alloc] initWithFrame:fromViewController.view.bounds];
     cellImageSnapshot.image = image;
     [cellImageSnapshot setFrame:AVMakeRectWithAspectRatioInsideRect(cellImageSnapshot.image.size,fromViewController.view.bounds)];
     cellImageSnapshot.contentMode = UIViewContentModeScaleAspectFit;
@@ -142,7 +142,7 @@
         }
     }
     
-    self.cellImageSnapshot = [[MHUIImageViewContentViewAnimation alloc] initWithFrame:fromViewController.view.bounds];
+    self.cellImageSnapshot = [[MHContentViewAnimationUIImageView alloc] initWithFrame:fromViewController.view.bounds];
     self.cellImageSnapshot.contentMode = UIViewContentModeScaleAspectFit;
     self.cellImageSnapshot.image = image;
     [self.cellImageSnapshot setFrame:AVMakeRectWithAspectRatioInsideRect(self.cellImageSnapshot.image.size,fromViewController.view.bounds)];
