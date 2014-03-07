@@ -188,7 +188,7 @@
         [cell.contentView addSubview:cell.price];
     }
     
-    [cell.recommendString setText:@"爱柚年度精选手机壳，编辑推荐，浮雕优选，值得拥有，顺丰包邮光速送达。庆祝爱柚开业一年特别活动，精品特价，仅限一天"];
+    [cell.recommendString setText:@"ACA年度精选果汁杯，值得拥有，顺丰包邮光速送达。庆祝开业一年特别活动，精品特价，仅限一天，3.7女人节，呵护你最爱的她"];
     [cell.recommendString sizeToFit];
     
     [cell.normalPrice setText:@"99.00"];
