@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Mario Hahn. All rights reserved.
 //
 
-#import "ExampleViewControllerCollectionViewInTableView.h"
+#import "ExampleViewController.h"
 #import "MHGalleryImageViewerViewController.h"
 #import "MHGalleryCells.h"
 
@@ -23,11 +23,11 @@
 
 @end
 
-@interface ExampleViewControllerCollectionViewInTableView ()
+@interface ExampleViewController ()
 @property(nonatomic,strong) NSArray *galleryDataSource;
 @end
 
-@implementation ExampleViewControllerCollectionViewInTableView
+@implementation ExampleViewController
 
 - (void)viewDidLoad
 {
@@ -57,13 +57,12 @@
     
     MHGalleryItem *landschaft10 = [[MHGalleryItem alloc]initWithURL:@"http://4.bp.blogspot.com/-8O0ZkAgb6Bo/Ulf_80tUN6I/AAAAAAAAH34/I1L2lKjzE9M/s1600/Beautiful-Scenery-Wallpapers.jpg"];
 
-    NSMutableAttributedString *string = [[NSMutableAttributedString alloc]initWithString:@"Awesome!!\nOr isn't it?"];
-    
-    [string setAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:15]} range:NSMakeRange(0, string.length)];
-    [string setAttributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:17]} range:NSMakeRange(0, 9)];
-    
-    landschaft10.attributedString = string;
-    
+//    NSMutableAttributedString *string = [[NSMutableAttributedString alloc]initWithString:@"Awesome!!\nOr isn't it?"];
+//    
+//    [string setAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:15]} range:NSMakeRange(0, string.length)];
+//    [string setAttributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:17]} range:NSMakeRange(0, 9)];
+//    
+//    landschaft10.attributedString = string;
     
     self.galleryDataSource = @[@[landschaft10,landschaft8,landschaft7,landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1,landschaft10,landschaft8,landschaft7,landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1,landschaft10,landschaft8,landschaft7,landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
                                @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
@@ -83,7 +82,51 @@
 
 #pragma mark - Actions
 
--(void)galleryViewDidTap:(NSArray *)array imageView:(UIImageView *)imageView forRow:(NSInteger)row inView:(UICollectionView *)view
+#pragma mark MHGalleryViewDelegate
+
+- (NSInteger)numberOfRowsInSectionInMHTable
+{
+    return 1;
+}
+
+- (NSInteger)numberOfSectionsInMHTable
+{
+    return [_galleryDataSource count];
+}
+
+- (CGFloat)heightForRowAtIndexPathInMHTable:(NSIndexPath *)indexPath
+{
+    return 330;
+}
+
+- (UITableViewCell *)cellForRowAtIndexPathInMHTable:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath reuseCellIdentifier:(NSString *)identifier inMH:(MHGalleryView *)galleryView
+{
+    MHGalleryTableViewCell *cell = (MHGalleryTableViewCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+    
+    if (!cell){
+        cell = [[MHGalleryTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+    }
+    
+    [cell.collectionView setDelegate:galleryView];
+    [cell.collectionView setDataSource:galleryView];
+    [cell.collectionView setTag:indexPath.section];
+    [cell.collectionView reloadData];
+    
+    return cell;
+}
+
+- (NSInteger)numberOfSectionsInCollectionView
+{
+    return 1;
+}
+
+- (NSInteger)numberOfCellInCollectionViewWithTag:(NSInteger)collectionTag
+{
+    NSLog(@"%ld",(long)[self.galleryDataSource[collectionTag] count]);
+    return [self.galleryDataSource[collectionTag] count];
+}
+
+- (void)galleryViewDidTap:(NSArray *)array imageView:(UIImageView *)imageView forRow:(NSInteger)row inView:(UICollectionView *)view
 {
     [self presentMHGalleryWithItems:array
                            forIndex:row

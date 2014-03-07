@@ -13,5 +13,5 @@
 @interface UINavigationController (autoRotate)
 @end
 
-@interface ExampleViewControllerCollectionViewInTableView : UIViewController<UIViewControllerTransitioningDelegate,MHGalleryViewDelegate>
+@interface ExampleViewController : UIViewController<UIViewControllerTransitioningDelegate,MHGalleryViewDelegate>
 @end

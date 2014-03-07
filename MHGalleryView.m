@@ -64,51 +64,64 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return self.galleryDataSource.count;
-}
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
-    return [self.galleryDataSource[collectionView.tag] count];
+    if (_delegate && [_delegate respondsToSelector:@selector(numberOfSectionsInMHTable)]) {
+        return [_delegate numberOfSectionsInMHTable];
+    } else {
+        return 0;
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 330;
-}
-
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
-{
-    return 1;
+    if (_delegate && [_delegate respondsToSelector:@selector(heightForRowAtIndexPathInMHTable:)]) {
+        return [_delegate heightForRowAtIndexPathInMHTable:indexPath];
+    } else {
+        return 0;
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;
+    if (_delegate && [_delegate respondsToSelector:@selector(numberOfRowsInSectionInMHTable)]) {
+        return [_delegate numberOfRowsInSectionInMHTable];
+    } else {
+        return 0;
+    }
 }
 
 static NSString* cellIdentifier = @"TestCell";;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    MHGalleryTableViewCell *cell = (MHGalleryTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    
-    if (!cell){
-        cell = [[MHGalleryTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+    if (_delegate && [_delegate respondsToSelector:@selector(cellForRowAtIndexPathInMHTable:atIndexPath:reuseCellIdentifier:inMH:)]) {
+        return [_delegate cellForRowAtIndexPathInMHTable:tableView atIndexPath:indexPath reuseCellIdentifier:cellIdentifier inMH:self];
+    } else {
+        return nil;
     }
-    
-    [cell.collectionView setDelegate:self];
-    [cell.collectionView setDataSource:self];
-    [cell.collectionView setTag:indexPath.section];
-    [cell.collectionView reloadData];
-    
-    return cell;
 }
 
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    if (_delegate && [_delegate respondsToSelector:@selector(numberOfCellInCollectionViewWithTag:)]) {
+        return [_delegate numberOfCellInCollectionViewWithTag:collectionView.tag];
+    } else {
+        return 0;
+    }
+}
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    if (_delegate && [_delegate respondsToSelector:@selector(numberOfSectionsInCollectionView)]) {
+        return [_delegate numberOfSectionsInCollectionView];
+    } else {
+        return 0;
+    }
+}
+
+static NSString *MHGalleryOverViewCell = @"MHGalleryOverViewCell";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     UICollectionViewCell *cell =nil;
-    NSString *cellIdentifier = @"MHGalleryOverViewCell";
-    cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
+    cell = [collectionView dequeueReusableCellWithReuseIdentifier:MHGalleryOverViewCell forIndexPath:indexPath];
     NSIndexPath *indexPathNew = [NSIndexPath indexPathForRow:indexPath.row inSection:collectionView.tag];
     [self makeOverViewDetailCell:(MHGalleryViewCell*)cell atIndexPath:indexPathNew];
     
@@ -119,7 +132,6 @@ static NSString* cellIdentifier = @"TestCell";;
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     UIImageView *imageView = [(MHGalleryViewCell*)[collectionView cellForItemAtIndexPath:indexPath] thumbnail];
-    
     NSArray *galleryData = self.galleryDataSource[collectionView.tag];
     
     if (_delegate && [_delegate respondsToSelector:@selector(galleryViewDidTap:imageView:forRow:inView:)]) {

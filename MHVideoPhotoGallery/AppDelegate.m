@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 #import "MHGallery.h"
 
-#import "ExampleViewControllerCollectionViewInTableView.h"
+#import "ExampleViewController.h"
 
 @implementation AppDelegate
 
@@ -20,7 +20,7 @@
     self.window.tintColor = [UIColor colorWithRed:1 green:0.18 blue:0.33 alpha:1];
     self.window.backgroundColor = [UIColor blackColor];
     
-    ExampleViewControllerCollectionViewInTableView* vc = [[ExampleViewControllerCollectionViewInTableView alloc] init];
+    ExampleViewController* vc = [[ExampleViewController alloc] init];
     self.window.rootViewController = vc;
     
     [self.window makeKeyAndVisible];
