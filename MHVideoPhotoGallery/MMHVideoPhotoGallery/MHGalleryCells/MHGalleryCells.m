@@ -25,6 +25,11 @@
         self.act.color = [UIColor whiteColor];
         self.act.tag = 405;
         [[self contentView] addSubview:self.act];
+        
+        self.lbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
+        [_lbl setFont:[UIFont systemFontOfSize:16.0f]];
+        [_lbl setTextColor:[UIColor whiteColor]];
+        [self.contentView addSubview:_lbl];
     }
     return self;
 }
@@ -61,7 +66,7 @@
         layout.minimumInteritemSpacing = 15;
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         
-        self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 50, 300, 280) collectionViewLayout:layout];
+        self.collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
         self.collectionView.backgroundColor = [UIColor clearColor];
         
         [self.collectionView registerClass:[MHGalleryViewCell class] forCellWithReuseIdentifier:@"MHGalleryOverViewCell"];
@@ -73,6 +78,11 @@
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         [self.contentView addSubview:self.backView];
         [self.contentView addSubview:self.collectionView];
+        
+        self.lbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
+        [_lbl setFont:[UIFont systemFontOfSize:16.0f]];
+        [_lbl setTextColor:[UIColor whiteColor]];
+        [self.contentView addSubview:_lbl];
     }
     
     return self;

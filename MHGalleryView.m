@@ -42,6 +42,8 @@
     
     cell.thumbnail.image = nil;
     [cell.thumbnail setImageWithURL:[NSURL URLWithString:item.urlString]];
+    
+    [cell.lbl setText:[NSString stringWithFormat:@"%ld",(long)indexPath.row]];
 }
 
 #pragma mark - Lifecycle
@@ -61,6 +63,8 @@
 }
 
 #pragma mark - Actions
+
+#pragma mark UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -99,10 +103,12 @@ static NSString* cellIdentifier = @"TestCell";;
     }
 }
 
+#pragma mark UICollectionView
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     if (_delegate && [_delegate respondsToSelector:@selector(numberOfCellInCollectionViewWithTag:)]) {
-        return [_delegate numberOfCellInCollectionViewWithTag:collectionView.tag];
+        return [_delegate numberOfCellInCollectionViewWithTag:section];
     } else {
         return 0;
     }
@@ -120,8 +126,10 @@ static NSString* cellIdentifier = @"TestCell";;
 static NSString *MHGalleryOverViewCell = @"MHGalleryOverViewCell";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     UICollectionViewCell *cell =nil;
     cell = [collectionView dequeueReusableCellWithReuseIdentifier:MHGalleryOverViewCell forIndexPath:indexPath];
+
     NSIndexPath *indexPathNew = [NSIndexPath indexPathForRow:indexPath.row inSection:collectionView.tag];
     [self makeOverViewDetailCell:(MHGalleryViewCell*)cell atIndexPath:indexPathNew];
     

@@ -12,12 +12,15 @@
 
 @property (nonatomic, strong) UIImageView*  thumbnail;
 @property (nonatomic, strong) UIActivityIndicatorView* act;
+@property (nonatomic, strong) UILabel* lbl;
 
 @property (nonatomic, copy) void (^saveImage)(BOOL shouldSave);
 
 @end
 
 @interface MHGalleryTableViewCell : UITableViewCell
+
+@property (strong, nonatomic) UILabel* lbl;
 @property (strong, nonatomic) UICollectionView *collectionView;
 @property (strong, nonatomic) UIView *backView;
 

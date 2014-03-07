@@ -32,6 +32,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+ 
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
     
     self.title = @"CollectionInTable";
    
@@ -64,20 +66,21 @@
 //    
 //    landschaft10.attributedString = string;
     
-    self.galleryDataSource = @[@[landschaft10,landschaft8,landschaft7,landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1,landschaft10,landschaft8,landschaft7,landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1,landschaft10,landschaft8,landschaft7,landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
-                               @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
-                               @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
-                               @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
-                               @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
-                               @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
-                               @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
-                               @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1]
-                               ];
-
+//    self.galleryDataSource = @[@[landschaft10,landschaft8,landschaft7,landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1,landschaft10,landschaft8,landschaft7,landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1,landschaft10,landschaft8,landschaft7,landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
+//                               @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
+//                               @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1]
+//                               ];
+    self.galleryDataSource = @[@[landschaft9,landschaft6,landschaft5,landschaft4]];
+    
     MHGalleryView* view = [[MHGalleryView alloc] initWithFrame:self.view.frame];
     view.delegate = self;
     [view updateData:self.galleryDataSource];
     [self.view addSubview:view];
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
 }
 
 #pragma mark - Actions
@@ -107,9 +110,10 @@
         cell = [[MHGalleryTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     
+    [cell.lbl setText:[NSString stringWithFormat:@"%ld %ld",indexPath.row, [[_galleryDataSource objectAtIndex:indexPath.row] count]]];
+    
     [cell.collectionView setDelegate:galleryView];
     [cell.collectionView setDataSource:galleryView];
-    [cell.collectionView setTag:indexPath.section];
     [cell.collectionView reloadData];
     
     return cell;
@@ -122,7 +126,6 @@
 
 - (NSInteger)numberOfCellInCollectionViewWithTag:(NSInteger)collectionTag
 {
-    NSLog(@"%ld",(long)[self.galleryDataSource[collectionTag] count]);
     return [self.galleryDataSource[collectionTag] count];
 }
 
