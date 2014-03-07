@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C512EF3518C9B3750099FAAC /* RecommendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C512EF3418C9B3750099FAAC /* RecommendTableViewCell.m */; };
+		C512EF3818C9B4020099FAAC /* UIStrikeThroughLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = C512EF3718C9B4020099FAAC /* UIStrikeThroughLabel.m */; };
 		C583C96418C95631002BD07A /* MHGalleryView.m in Sources */ = {isa = PBXBuildFile; fileRef = C583C96318C95631002BD07A /* MHGalleryView.m */; };
 		F514263518911D8E0091E3DF /* 707-albums-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = F514263318911D8E0091E3DF /* 707-albums-selected.png */; };
 		F514263618911D8E0091E3DF /* 707-albums-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F514263418911D8E0091E3DF /* 707-albums-selected@2x.png */; };
@@ -98,6 +100,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C512EF3318C9B3750099FAAC /* RecommendTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecommendTableViewCell.h; sourceTree = "<group>"; };
+		C512EF3418C9B3750099FAAC /* RecommendTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecommendTableViewCell.m; sourceTree = "<group>"; };
+		C512EF3618C9B4020099FAAC /* UIStrikeThroughLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIStrikeThroughLabel.h; sourceTree = "<group>"; };
+		C512EF3718C9B4020099FAAC /* UIStrikeThroughLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIStrikeThroughLabel.m; sourceTree = "<group>"; };
 		C583C96218C95631002BD07A /* MHGalleryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MHGalleryView.h; sourceTree = "<group>"; };
 		C583C96318C95631002BD07A /* MHGalleryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MHGalleryView.m; sourceTree = "<group>"; };
 		F514263318911D8E0091E3DF /* 707-albums-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "707-albums-selected.png"; sourceTree = "<group>"; };
@@ -278,6 +284,10 @@
 		F53F923717EB008100A9FE6A = {
 			isa = PBXGroup;
 			children = (
+				C512EF3618C9B4020099FAAC /* UIStrikeThroughLabel.h */,
+				C512EF3718C9B4020099FAAC /* UIStrikeThroughLabel.m */,
+				C512EF3318C9B3750099FAAC /* RecommendTableViewCell.h */,
+				C512EF3418C9B3750099FAAC /* RecommendTableViewCell.m */,
 				C583C96218C95631002BD07A /* MHGalleryView.h */,
 				C583C96318C95631002BD07A /* MHGalleryView.m */,
 				F53F924917EB008100A9FE6A /* MHVideoPhotoGallery */,
@@ -512,7 +522,7 @@
 				ORGANIZATIONNAME = "Mario Hahn";
 				TargetAttributes = {
 					F53F923F17EB008100A9FE6A = {
-						DevelopmentTeam = 22DEN472RY;
+						DevelopmentTeam = 8BD7N5W84S;
 					};
 					F53F926017EB008100A9FE6A = {
 						TestTargetID = F53F923F17EB008100A9FE6A;
@@ -612,6 +622,7 @@
 			files = (
 				F5245DB118AA16D3004C6FFA /* SDWebImageManager.m in Sources */,
 				F5245DAE18AA16D3004C6FFA /* SDWebImageDecoder.m in Sources */,
+				C512EF3818C9B4020099FAAC /* UIStrikeThroughLabel.m in Sources */,
 				F5245DB218AA16D3004C6FFA /* SDWebImagePrefetcher.m in Sources */,
 				F53F925417EB008100A9FE6A /* AppDelegate.m in Sources */,
 				F5C52E9318C086E4001E431E /* MHGallery.m in Sources */,
@@ -624,6 +635,7 @@
 				F5DBBF2E187D582000BEFE29 /* MHContentViewAnimationUIImageView.m in Sources */,
 				F5245DAC18AA16D3004C6FFA /* SDImageCache.m in Sources */,
 				F5C52E8D18C0828E001E431E /* MHPresentMHGalleryTransition.m in Sources */,
+				C512EF3518C9B3750099FAAC /* RecommendTableViewCell.m in Sources */,
 				F5245DAF18AA16D3004C6FFA /* SDWebImageDownloader.m in Sources */,
 				F5245DB518AA16D3004C6FFA /* UIImage+MultiFormat.m in Sources */,
 				F5245DB318AA16D3004C6FFA /* UIButton+WebCache.m in Sources */,
@@ -756,7 +768,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -776,7 +788,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

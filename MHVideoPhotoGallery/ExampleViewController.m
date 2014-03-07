@@ -11,6 +11,7 @@
 #import "MHGalleryCells.h"
 
 #import "MHGalleryView.h"
+#import "RecommendTableViewCell.h"
 
 @implementation UINavigationController (autoRotate)
 
@@ -33,8 +34,6 @@
 
 - (void)makeOverViewDetailCell:(MHGalleryViewCell*)cell atIndexPath:(NSIndexPath*)indexPath
 {
-    NSLog(@"makeOverViewDetailCell called: %ld",(long)indexPath.row);
-    
     MHGalleryItem *item = self.galleryDataSource[indexPath.section][indexPath.row];
     
     [cell.thumbnail setContentMode:UIViewContentModeScaleAspectFill];
@@ -56,8 +55,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
- 
-    [[UIApplication sharedApplication] setStatusBarHidden:YES];
     
     self.title = @"CollectionInTable";
    
@@ -83,12 +80,12 @@
     
     MHGalleryItem *landschaft10 = [[MHGalleryItem alloc]initWithURL:@"http://4.bp.blogspot.com/-8O0ZkAgb6Bo/Ulf_80tUN6I/AAAAAAAAH34/I1L2lKjzE9M/s1600/Beautiful-Scenery-Wallpapers.jpg"];
 
-//    NSMutableAttributedString *string = [[NSMutableAttributedString alloc]initWithString:@"Awesome!!\nOr isn't it?"];
-//    
-//    [string setAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:15]} range:NSMakeRange(0, string.length)];
-//    [string setAttributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:17]} range:NSMakeRange(0, 9)];
-//    
-//    landschaft10.attributedString = string;
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc]initWithString:@"Awesome!!\nOr isn't it?"];
+    
+    [string setAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:15]} range:NSMakeRange(0, string.length)];
+    [string setAttributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:17]} range:NSMakeRange(0, 9)];
+    
+    landschaft10.attributedString = string;
     
     self.galleryDataSource = @[@[landschaft10,landschaft8,landschaft7,landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1,landschaft10,landschaft8,landschaft7,landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1,landschaft10,landschaft8,landschaft7,landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
                                @[landschaft9,landschaft6,landschaft5,landschaft4,landschaft3,landschaft2,landschaft,landschaft1],
@@ -105,11 +102,6 @@
     [view updateData];
     
     [self.view addSubview:view];
-}
-
-- (BOOL)prefersStatusBarHidden
-{
-    return YES;
 }
 
 #pragma mark - Actions
@@ -135,14 +127,15 @@
 
 - (UITableViewCell *)cellForRowAtIndexPathInMHTable:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath reuseCellIdentifier:(NSString *)identifier reuseCollectionIdentifier:(NSString *)cIdentifier inMH:(MHGalleryView *)galleryView
 {
-    MHGalleryTableViewCell *cell = (MHGalleryTableViewCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+    RecommendTableViewCell *cell = (RecommendTableViewCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
     
     if (!cell){
-        cell = [[MHGalleryTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+        cell = [[RecommendTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
         
         cell.backgroundColor = [UIColor clearColor];
         
         cell.backView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 330)];
+        cell.backView.backgroundColor = [UIColor whiteColor];
         
         cell.backView.layer.masksToBounds = NO;
         cell.backView.layer.shadowOffset = CGSizeMake(0, 0);
@@ -153,7 +146,7 @@
         cell.backView.layer.cornerRadius = 2.0;
         
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-        layout.sectionInset = UIEdgeInsetsMake(0, 25, 0, 25);
+        layout.sectionInset = UIEdgeInsetsMake(20, 25, 40, 25);
         layout.itemSize = CGSizeMake(270, 225);
         layout.minimumLineSpacing = 15;
         layout.minimumInteritemSpacing = 15;
@@ -171,7 +164,35 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         [cell.contentView addSubview:cell.backView];
         [cell.contentView addSubview:cell.collectionView];
+        
+#warning Try Add some info here.
+        cell.recommendString = [[UILabel alloc] initWithFrame:CGRectMake(10, 290, 300, 20)];
+        [cell.recommendString setTextAlignment:NSTextAlignmentLeft];
+        [cell.recommendString setTextColor:[UIColor blackColor]];
+        [cell.recommendString setFont:[UIFont systemFontOfSize:10.0f]];
+        cell.recommendString.numberOfLines = 0;
+        
+        cell.normalPrice = [[UIStrikeThroughLabel alloc] initWithFrame:CGRectMake(220, 310, 28, 20)];
+        cell.normalPrice.isWithStrikeThrough = YES;
+        [cell.normalPrice setTextAlignment:NSTextAlignmentCenter];
+        [cell.normalPrice setTextColor:[UIColor grayColor]];
+        [cell.normalPrice setFont:[UIFont systemFontOfSize:10.0f]];
+        
+        cell.price = [[UILabel alloc] initWithFrame:CGRectMake(250, 310, 50, 20)];
+        [cell.price setTextAlignment:NSTextAlignmentCenter];
+        [cell.price setTextColor:[UIColor redColor]];
+        [cell.price setFont:[UIFont systemFontOfSize:10.0f]];
+        
+        [cell.contentView addSubview:cell.recommendString];
+        [cell.contentView addSubview:cell.normalPrice];
+        [cell.contentView addSubview:cell.price];
     }
+    
+    [cell.recommendString setText:@"爱柚年度精选手机壳，编辑推荐，浮雕优选，值得拥有，顺丰包邮光速送达。庆祝爱柚开业一年特别活动，精品特价，仅限一天"];
+    [cell.recommendString sizeToFit];
+    
+    [cell.normalPrice setText:@"99.00"];
+    [cell.price setText:@"66.00"];
     
     [cell.collectionView setDelegate:galleryView];
     [cell.collectionView setDataSource:galleryView];
@@ -190,8 +211,6 @@
 
 - (NSInteger)numberOfCellInCollectionViewWithTag:(NSInteger)collectionTag
 {
-    NSLog(@"numberOfCellInCollectionViewWithTag: %ld",(long)[self.galleryDataSource[collectionTag] count]);
-    
     return [self.galleryDataSource[collectionTag] count];
 }
 

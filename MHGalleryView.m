@@ -41,6 +41,7 @@ static NSString *MHGalleryOverViewCell = @"MHGalleryOverViewCell";
         
         self.tableView.dataSource = self;
         self.tableView.delegate = self;
+//        _tableView.separatorStyle = NO;
     }
     return self;
 }
