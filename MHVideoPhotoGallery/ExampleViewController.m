@@ -206,9 +206,9 @@
     return cell;
 }
 
-- (void)galleryViewDidTap:(NSArray *)array imageView:(UIImageView *)imageView forRow:(NSInteger)row inView:(UICollectionView *)view
+- (void)galleryViewDidTapImageView:(UIImageView *)imageView forRow:(NSInteger)row inView:(UICollectionView *)view
 {
-    [self presentMHGalleryWithItems:array
+    [self presentMHGalleryWithItems:self.galleryDataSource[view.tag]
                            forIndex:row
                       fromImageView:imageView
                      finishCallback:^(UINavigationController *galleryNavMH, NSInteger pageIndex, UIImage *image,MHDismissMHGalleryTransition *interactiveDismissMHGallery) {

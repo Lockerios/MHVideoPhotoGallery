@@ -22,7 +22,7 @@
 - (UICollectionViewCell*)cellForItemAtIndexPathInMHCollection:(UICollectionView*)collection atIndexPath:(NSIndexPath*)indexPath reuseCellIdentifier:(NSString*)identifier;
 
 @optional
-- (void)galleryViewDidTap:(NSArray*)array imageView:(UIImageView*)imageView forRow:(NSInteger)row inView:(UICollectionView*)view;
+- (void)galleryViewDidTapImageView:(UIImageView*)imageView forRow:(NSInteger)row inView:(UICollectionView*)view;
 
 @end
 

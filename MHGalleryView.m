@@ -117,10 +117,9 @@ static NSString *MHGalleryOverViewCell = @"MHGalleryOverViewCell";
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     UIImageView *imageView = [(MHGalleryViewCell*)[collectionView cellForItemAtIndexPath:indexPath] thumbnail];
-    NSArray *galleryData = self.galleryDataSource[collectionView.tag];
     
-    if (_delegate && [_delegate respondsToSelector:@selector(galleryViewDidTap:imageView:forRow:inView:)]) {
-        [_delegate galleryViewDidTap:galleryData imageView:imageView forRow:indexPath.row inView:collectionView];
+    if (_delegate && [_delegate respondsToSelector:@selector(galleryViewDidTapImageView:forRow:inView:)]) {
+        [_delegate galleryViewDidTapImageView:imageView forRow:indexPath.row inView:collectionView];
     }
 }
 
